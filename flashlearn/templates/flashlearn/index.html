@@ -1,10 +1,147 @@
-{% extends "flashlearn/base.html" %}
-{% load static %}
+{% extends "flashlearn/base.html" %} {% load static %} 
 {% block css %}
-<link href="{% static 'flashlearn/index.css' %}" rel="stylesheet">
-{% endblock %}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+  rel="stylesheet"
+/>
+<link href="{% static 'flashlearn/index.css' %}" rel="stylesheet" />
+{% endblock %} 
 
 {% block body %}
+<div id="top-section">
+<img src="{% static 'flashlearn/study.jpg' %}" id="study-image" >
+<h5 id="image-head">Flashlearn</h5>
+<h6 id="image-text">Power up your learning today</h6>
+{% if user.is_authenticated %}
+<a href="/create" id="create-button-link"><button id="create-button">Create pack<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus" viewBox="-2 1 16 16">
+    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+  </svg></button></a>
+{% endif %}
+</div>
+<form action="" method="GET" >
+  {% csrf_token %}
+  <div id="search-area">
+    <input
+      type="text"
+      name="search"
+      placeholder="Search by keywords..."
+      autocomplete="off"
+      id="search-bar"
+    />
+    <input type="submit" value="Search" id="submit-com" />
+    <button type="submit" id="submit-mobile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-search" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg></button>
+  </div>
+</form>
+<div id="action-container">
+    <button id="filter-button">Filter<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+        <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+      </svg></button>
+    <button id="sort-button">Sort<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+        <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+      </svg></button>
+    <div id="filter-view">
+        <p>Filter by:</p>
+        <form method="post" action="" id="filter-form">
+        <ul id="filter-list">
+            <li id="cat-filters">
+                <p><b>Category</b>:</p>
+                {% if user.is_authenticated %}
+                <input type="checkbox" id="filter-category-favourite" name="category_fav" value="favourite">
+                <label for="filter-category-favourite"> Favourites</label><br>
+                {% endif %}
+                <!-- TBD load in all possible categories -->
+            </li>
+            <li>
+                <p><b>Recency:</b></p>
+                <input type="radio" id="filter-date-today" name="date" value="today">
+                <label for="filter-date-today"> Today</label><br>
+                <input type="radio" id="filter-date-week" name="date" value="week">
+                <label for="filter-date-week"> Last week</label><br>
+                <input type="radio" id="filter-date-month" name="date" value="month">
+                <label for="filter-date-month"> Last month</label><br>
+                <input type="radio" id="filter-date-year" name="date" value="year">
+                <label for="filter-date-year"> Last year</label><br>
+                <input type="radio" id="filter-date-all" name="date" value="all" checked>
+                <label for="filter-date-all"> All time</label><br>
 
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+                <p><b>Users:</b></p>
+                <input type="radio" id="filter-user-all" name="users" value="all" checked>
+                <label for="filter-user-all"> All</label><br>
+                <input type="radio" id="filter-user-friends" name="users" value="friends">
+                <label for="filter-user-friends"> Friends</label><br>
+                <input type="radio" id="filter-user-me" name="users" value="me">
+                <label for="filter-user-me"> Me</label><br>
+            </li>
+            {% endif %}
+        </ul>
+        <ul id="filter-actions">
+            <li>
+                <input type="submit" value="Apply" id="submit-filter">
+            </li>
+            <li>
+                <button id="cancel-filter">Cancel</button>
+            </li>
+        </ul>
+        </form>
+    </div>
+    <div id="sort-view">
+        <p>Filter by:</p>
+        <form method="post" action="">
+        <ul>
+            <li>
+                <p>Time:</p>
+                <input type="checkbox" id="sort-time" name="sort" value="time" checked>
+                <label for="sort-time"> Recency</label><br>
+        
+                <input type="radio" id="sort-time-asc" name="time-order" value="asc">
+                <label for="sort-time-asc"> Ascending</label><br>
+                <input type="radio" id="sort-time-desc" name="time-order" value="desc" checked>
+                <label for="sort-time-desc"> Descending</label><br>
+            </li>
+            <li>
+                <p>Name:</p>
+                <input type="checkbox" id="sort-name" name="sort" value="name">
+                <label for="sort-name"> Name</label><br>
+        
+                <input type="radio" id="sort-name-asc" name="name-order" value="asc">
+                <label for="sort-name-asc"> Ascending</label><br>
+                <input type="radio" id="sort-name-desc" name="name-order" value="desc" >
+                <label for="sort-name-desc"> Descending</label><br>
+            </li>
+            <li>
+                <p>Likes:</p>
+                <input type="checkbox" id="sort-likes" name="sort" value="likes">
+        <label for="sort-likes"> Likes</label><br>
 
+        <input type="radio" id="sort-likes-asc" name="likes-order" value="asc">
+        <label for="sort-likes-asc"> Ascending</label><br>
+        <input type="radio" id="sort-likes-desc" name="likes-order" value="desc" >
+        <label for="sort-likes-desc"> Descending</label><br>
+            </li>
+        </ul>
+        <input type="submit" value="Apply" id="submit-sort">
+        <button id="cancel-sort">Cancel</button>
+        </form>
+    </div>
+</div>
+<div id="pack-container">
+    {% for i in list %}
+    <div class="card shadow-sm something" style="width: 12rem;">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <a href="#" class="stretched-link"></a>
+        </div>
+
+      </div>
+    {% endfor %}
+</div>
 {% endblock %}

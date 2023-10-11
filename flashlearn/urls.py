@@ -9,4 +9,6 @@ urlpatterns = [
     path("tutorial", views.tutorial_view, name="tutorial"),
     path("logout", views.logout_view, name="logout"),
     path("friends", views.friends_view, name="friends"),
+    path("create", views.create_view, name="create"),
+    path("profile", views.profile_view, name="profile"),
 ]

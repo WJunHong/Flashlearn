@@ -1,0 +1,161 @@
+{% extends "flashlearn/base.html" %}
+{% load static %}
+
+{% block css %}
+<link href="{% static 'flashlearn/styles_create.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<!-- Mobile view -->
+<div class="card shadow mb-3" style="width: 80%;">
+    <div id="create-image-container">
+    <img class="card-img-top create-image" src="{% static 'flashlearn/create.jpg' %}" alt="Card image cap">
+    </div>
+    <div class="card-header">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#tabName">Name</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " data-toggle="tab" href="#tabDescrip">Description</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " data-toggle="tab" href="#tabCards">Cards</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " data-toggle="tab" href="#tabPrivacy">Privacy</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " data-toggle="tab" href="#tabSubmit">Submit</a>
+            </li>
+          </ul>
+      </div>
+    <div class="card-body">
+      <h5 class="card-title mb-4"> Create your pack now!</h5>
+      <form action="{% url 'register' %}" method="POST" class="mb-5">
+          {% csrf_token %}
+          <div class="tab-content">
+          <div class="tab-pane container active form-group" id="tabName">
+            <label for="packName" >Name:</label>
+            <input type="text" class="form-control shadow-none" id="packName" placeholder="Give your pack a name" name="name" required autofocus autocomplete="off">
+          </div>
+          <div class="tab-pane container fade form-group" id="tabDescrip">
+            <label for="packDescription" >Description (optional):</label>
+            <input type="text" class="form-control shadow-none mb-3" id="packDescription" placeholder="Let people know more about your card pack!" name="description" autofocus autocomplete="off">
+            <label for="packCat" class="form-label">Category (optional):</label>
+            <input class="form-control shadow-none" list="datalistOptions" id="packCat" placeholder="Type to search..." name="category">
+            <datalist id="datalistOptions">
+                {% for cat in categories %}
+                    <option value="{{ cat }}">                    
+                {% endfor %}
+            </datalist>
+          </div>
+          <div class="tab-pane container fade form-group" id="tabCards">
+            <div class="border p-3 rounded shadow-sm">
+                <label for="Q1" >Question</label>
+                <input type="text" class="form-control shadow-none mb-3" id="Q1" placeholder="E.g. What is the atomic mass of carbon?" name="Q1" required autofocus autocomplete="off">
+                <div class="input-group mb-3 ">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="ID1">Image (optional)</span>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="I1" name="image"
+                        aria-describedby="ID1">
+                      <label class="custom-file-label" for="I1">Image</label>
+                    </div>
+                  </div>
+                <label for="H1" >Hint (optional):</label>
+                <input type="text" class="form-control shadow-none mb-3" id="H1" name="H1" autocomplete="off">
+                <div class="mb-3">
+                <label>Difficulty:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="DF1" id="DE_1" value="Easy">
+                    <label class="form-check-label" for="DE_1">Easy</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="DF1" id="DM_1" value="Medium">
+                    <label class="form-check-label" for="DM_1">Medium</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="DF1" id="DH_1" value="Hard">
+                    <label class="form-check-label" for="DH_1">Hard</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="DF1" id="DN_1" value="None" checked>
+                    <label class="form-check-label" for="DN_1">None</label>
+                  </div>
+                </div>
+                <label for="A1" >Answer:</label>
+                <input type="text" class="form-control shadow-none mb-3" id="A1" name="A1" autocomplete="off" placeholder="E.g. 14">
+                <div id="buttons_1">
+                    <button class="btn btn-success shadow-none">Add card +</button>
+                    <button class="btn btn-success shadow-none d-none">Remove card -</button>
+                    <button class="btn btn-success shadow-none d-none">Edit options</button>
+                    
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane container fade form-group" id="tabPrivacy">
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="radio" name="privacy" id="priv1" checked>
+                <label class="form-check-label" for="priv1">
+                  All users (recommended!)
+                </label>
+              </div>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="radio" name="privacy" id="priv1">
+                <label class="form-check-label" for="priv2">
+                  Friends only
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="privacy" id="priv3">
+                <label class="form-check-label" for="priv3">
+                  No one
+                </label>
+              </div>
+          </div>
+          <div class="tab-pane container fade form-group text-center" id="tabSubmit">
+            <button type="submit" class="btn btn-primary shadow-none">Submit!</button>
+          </div>
+
+        </div>
+      </form>
+    
+    </div>
+  </div>
+  <!-- PC view -->
+<!-- <div class="card shadow d-none" style="width: 80%;">
+    <div class="card-body">
+    <h5 class="card-title mb-4"></h5>
+    <form action="{% url 'register' %}" method="POST" class="mb-5">
+        {% csrf_token %}
+        <div class="form-group mb-4 text-left ">
+            <label for="signupEmail" >Email address</label>
+            <input type="email" class="form-control shadow-none {% if not ev %} is-invalid {% endif %}" id="signupEmail" placeholder="Enter a valid email address" name="email" required autofocus autocomplete="off">
+            <div class="invalid-feedback" id="email-error">
+                This email already exists!
+            </div>
+        </div>
+        <div class="form-group mb-4 text-left">
+            <label for="signupUsername">Username</label>
+            <input type="text" class="form-control shadow-none {% if not uv %} is-invalid {% endif %}" id="signupUsername" placeholder="Enter your username!" aria-describedby="usernameHelp" required autocomplete="off" name="username"><small id="usernameHelp" class="form-text text-muted">Ensure username is unique!</small>
+            <div class="invalid-feedback" id="username-error">
+                This username already exists
+            </div>
+        </div>
+        <div class="form-group mb-4 text-left">
+            <label for="signupPassword" >Password</label>
+            <input type="password" class="form-control shadow-none {% if not pv %} is-invalid {% endif %}" id="signupPassword" placeholder="Enter new password" aria-describedby="passwordHelp" required autocomplete="off" name="password"><small id="passwordHelp" class="form-text text-muted">Ensure password is at least 6 characters long, contains uppercase and lowercase and has at least 1 special character.</small>
+            <div class="invalid-feedback" id="password-error">
+                Your password did not satisfy one of the requirements!
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary shadow-none">Create Account</button>
+
+    </form>
+    Already have an account? <a href="{% url 'login' %}">Login</a> now!
+
+    </div> -->
+</div>
+{% endblock %}

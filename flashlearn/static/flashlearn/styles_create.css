@@ -1,0 +1,14 @@
+#app {
+  display: flex;
+  margin-top: 64px;
+  align-items: center;
+  justify-content: center;
+}
+#create-image-container {
+  display: flex;
+  justify-content: center;
+}
+.card-img-top.create-image {
+  width: 60%;
+  height: auto;
+}

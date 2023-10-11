@@ -12,12 +12,22 @@ import json
 import re
 
 
+def create_view(request):
+    return render(request, "flashlearn/create.html")
+
+
+def profile_view(request):
+    return render(request, "flashlearn/profile.html")
+
+
 def tutorial_view(request):
     return render(request, "flashlearn/tutorial.html")
 
 
 def index(request):
-    return render(request, "flashlearn/index.html")
+    return render(request, "flashlearn/index.html", {
+        "list": [1, 2, 3, 4, 5, 6, 7]
+    })
 
 
 def friends_view(request):
@@ -33,32 +43,33 @@ def register_view(request):
         username = request.POST["username"]
         email = request.POST["email"]
         if User.objects.filter(email=email).exists():
-            toSend["email-valid"] = False
+            toSend["ev"] = False
         else:
-            toSend["email-valid"] = True
+            toSend["ev"] = True
         # Ensure password matches confirmation
         password = request.POST["password"]
         if not re.match(r"^(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z]).{6,}$", password):
-            toSend["password-valid"] = False
+            toSend["pv"] = False
         else:
-            toSend["password-valid"] = True
+            toSend["pv"] = True
         # Attempt to create new user
         try:
-            if not toSend["email-valid"] or not toSend["password-valid"]:
+            if not toSend["ev"] or not toSend["pv"]:
+                toSend["uv"] = True
                 return render(request, "flashlearn/register.html", toSend)
             # 2 users cannot have the same username
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            toSend["username-valid"] = False
+            toSend["uv"] = False
             return render(request, "flashlearn/register.html", toSend)
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "flashlearn/register.html", {
-            "username-valid": True,
-            "email-valid": True,
-            "password-valid": True,
+            "uv": True,
+            "ev": True,
+            "pv": True,
         })
 
 

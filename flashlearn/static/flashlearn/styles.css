@@ -1,1 +1,14 @@
+@media only screen and (max-width: 576px) {
+  .navbar-expand-sm .navbar-nav.bigger {
+    display: none;
+  }
+}
 
+@media only screen and (min-width: 577px) {
+  .navbar-expand-sm .navbar-toggler {
+    display: none;
+  }
+  .navbar-expand-sm .navbar-nav.smaller {
+    display: none;
+  }
+}

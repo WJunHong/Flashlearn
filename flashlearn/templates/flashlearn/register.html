@@ -5,12 +5,8 @@
 <link href="{% static 'flashlearn/styles_signinup.css' %}" rel="stylesheet">
 {% endblock %}
 
-{% block script %}
-<script src="{% static 'flashlearn/register_login.js' %}">
-</script>
-{% endblock %}
-
 {% block body %}
+
 <div class="card text-center shadow" style="width: 80%;">
     <div class="card-body">
       <h5 class="card-title mb-4">Sign up for free!</h5>
@@ -18,22 +14,22 @@
           {% csrf_token %}
           <div class="form-group mb-4 text-left ">
             <label for="signupEmail" >Email address</label>
-            <input type="email" class="form-control shadow-none {% if not 'email-valid' %} is-invalid {% endif %}" id="signupEmail" placeholder="Enter a valid email address" name="email" required autofocus autocomplete="off">
-            <div class="invalid-feedback {% if 'email-valid' %}d-none {% endif %}" id="email-error">
+            <input type="email" class="form-control shadow-none {% if not ev %} is-invalid {% endif %}" id="signupEmail" placeholder="Enter a valid email address" name="email" required autofocus autocomplete="off">
+            <div class="invalid-feedback" id="email-error">
                 This email already exists!
               </div>
           </div>
           <div class="form-group mb-4 text-left">
             <label for="signupUsername">Username</label>
-            <input type="text" class="form-control shadow-none {% if not 'username-valid' %} is-invalid {% endif %}" id="signupUsername" placeholder="Enter your username!" aria-describedby="usernameHelp" required autocomplete="off" name="username"><small id="usernameHelp" class="form-text text-muted">Ensure username is unique!</small>
-            <div class="invalid-feedback {% if 'username-valid' %}d-none {% endif %}" id="username-error">
+            <input type="text" class="form-control shadow-none {% if not uv %} is-invalid {% endif %}" id="signupUsername" placeholder="Enter your username!" aria-describedby="usernameHelp" required autocomplete="off" name="username"><small id="usernameHelp" class="form-text text-muted">Ensure username is unique!</small>
+            <div class="invalid-feedback" id="username-error">
                 This username already exists
               </div>
           </div>
           <div class="form-group mb-4 text-left">
             <label for="signupPassword" >Password</label>
-            <input type="password" class="form-control shadow-none {% if not 'password-valid' %} is-invalid {% endif %}" id="signupPassword" placeholder="Enter new password" aria-describedby="passwordHelp" required autocomplete="off" name="password"><small id="passwordHelp" class="form-text text-muted">Ensure password is at least 6 characters long, contains uppercase and lowercase and has at least 1 special character.</small>
-            <div class="invalid-feedback {% if 'password-valid' %}d-none {% endif %}" id="password-error">
+            <input type="password" class="form-control shadow-none {% if not pv %} is-invalid {% endif %}" id="signupPassword" placeholder="Enter new password" aria-describedby="passwordHelp" required autocomplete="off" name="password"><small id="passwordHelp" class="form-text text-muted">Ensure password is at least 6 characters long, contains uppercase and lowercase and has at least 1 special character.</small>
+            <div class="invalid-feedback" id="password-error">
                 Your password did not satisfy one of the requirements!
               </div>
           </div>
