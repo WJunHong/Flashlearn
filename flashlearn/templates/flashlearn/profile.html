@@ -1,9 +1,40 @@
-{% extends "flashlearn/base.html" %}
-{% load static %}
+{% extends "flashlearn/base.html" %} 
+{% load static %} 
 {% block css %}
-<link href="{% static 'flashlearn/styles_profile.css' %}" rel="stylesheet">
-{% endblock %}
-
+<link href="{% static 'flashlearn/styles_profile.css' %}" rel="stylesheet" />
+{% endblock %} 
 {% block body %}
+<div id="profile-container">
+  <div id="profile-header">
+    <img
+      src="{% static 'flashlearn/default_profile.jpg'%}"
+      id="profile-image"
+    />
+    <div>
 
+        <button class="btn btn-dark">Upload new photo</button>
+        <button class="btn btn-secondary">Upload new background</button>
+    </div>
+    <div id="profile-info">
+      <h3>
+        Username<span class="badge badge-success ml-2"># Something</span>
+      </h3>
+    </div>
+  </div>
+  <div id="profile-packs">
+    {% for i in list %}
+    <div class="card shadow-sm something" style="width: 12rem">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+        <p class="card-text">
+          Some quick example text to build on the card title and make up the
+          bulk of the card's content.
+        </p>
+        <a href="#" class="stretched-link"></a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

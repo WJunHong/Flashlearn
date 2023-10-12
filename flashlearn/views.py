@@ -17,7 +17,18 @@ def create_view(request):
 
 
 def profile_view(request):
-    return render(request, "flashlearn/profile.html")
+    return render(request, "flashlearn/profile.html", {
+        "list": [1, 2, 3, 4, 5, 6, 7]
+    })
+
+
+def pack_view(request, pack_id,  profile=None):
+    if profile:
+        return HttpResponseRedirect(f"/{pack_id}")
+    print(pack_id)
+    return render(request, "flashlearn/pack.html", {
+        "frog": pack_id
+    })
 
 
 def tutorial_view(request):

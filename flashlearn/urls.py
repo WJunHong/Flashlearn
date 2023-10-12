@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -11,4 +11,6 @@ urlpatterns = [
     path("friends", views.friends_view, name="friends"),
     path("create", views.create_view, name="create"),
     path("profile", views.profile_view, name="profile"),
+    re_path(r'^(?P<profile>profile/)?(?P<pack_id>pack/(\d|\w){6})',
+            views.pack_view, name='pack')
 ]
