@@ -1,0 +1,171 @@
+.pack-container {
+  font-family: "Roboto", sans-serif;
+  padding-bottom: 16px;
+}
+#favourite-btn {
+  border: none;
+  border-radius: 14px;
+  width: 28px;
+  height: 28px;
+  background-color: orange;
+}
+.like-btn {
+  border: none;
+  border-radius: 14px;
+  width: 28px;
+  height: 28px;
+}
+#like-count {
+  font-weight: bold;
+}
+.descrip {
+  max-width: 80%;
+  height: auto;
+  word-wrap: normal;
+}
+#middle-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.like {
+  background-color: rgba(0, 128, 0, 0.3);
+}
+.dislike {
+  background-color: rgba(255, 0, 0, 0.3);
+}
+.like-actions {
+  width: 100%;
+  border-bottom: 1px solid grey;
+  padding-bottom: 8px;
+}
+#bottom-segment {
+  display: flex;
+}
+#edit-btn {
+  background-color: rgb(56, 114, 98);
+  border: none;
+  color: white;
+  width: fit-content;
+  padding: 8px;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+#start-btn {
+  background-color: rgb(89, 188, 160);
+  border: none;
+  color: white;
+  width: fit-content;
+  padding: 8px;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+.comment-list {
+  list-style-type: none;
+  padding: 0;
+}
+.comment-list-item {
+  width: 100%;
+  height: auto;
+  padding: 4px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+.comment-list-item img {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  border-left: 1px solid grey;
+}
+.comment-list-item span {
+  font-weight: 600;
+}
+.comment-list-item .comment-body {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.comment-form {
+  width: 100%;
+  display: flex;
+}
+.comment-form input {
+  border: none;
+  background-color: #037bfe;
+  color: white;
+  height: 32px;
+  border-radius: 12px;
+}
+#report-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: red;
+  border-radius: 16px;
+}
+@media only screen and (max-width: 285px) {
+  #edit-btn {
+    background-color: rgb(56, 114, 98);
+    border: none;
+    color: white;
+    width: fit-content;
+    padding: 8px;
+    border-radius: 16px;
+  }
+  #start-btn {
+    background-color: rgb(89, 188, 160);
+    border: none;
+    color: white;
+    width: fit-content;
+    padding: 8px;
+    border-radius: 16px;
+    margin-top: 4px;
+  }
+}
+@media only screen and (max-width: 576px) {
+  #left-side {
+    width: 100%;
+    margin-bottom: 32px;
+  }
+  #right-side {
+    border-top: 1px solid grey;
+    width: 100%;
+    padding-top: 16px;
+  }
+  #bottom-segment {
+    flex-direction: column;
+  }
+  .comment-form {
+    flex-direction: column;
+  }
+  .comment-form input {
+    width: fit-content;
+    margin-top: 8px;
+  }
+}
+@media only screen and (min-width: 577px) {
+  #left-side {
+    width: 50%;
+  }
+  #right-side {
+    width: 50%;
+  }
+  #bottom-segment {
+    flex-direction: row;
+  }
+  .comment-form {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .comment-form input {
+    margin-left: 4px;
+  }
+  .comment-form textarea {
+    width: 90%;
+    max-height: 200px;
+    padding: 6px;
+    min-height: 64px;
+  }
+  .custom-select.form-control {
+    width: 50%;
+  }
+}

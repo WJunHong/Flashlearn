@@ -11,6 +11,12 @@
   font-weight: bold;
   border-radius: 10px;
 }
+#action-container {
+  position: sticky;
+  top: 56px;
+  z-index: 5;
+  background-color: white;
+}
 .card.shadow-sm.something:hover {
   cursor: pointer;
 }
@@ -131,9 +137,6 @@
   justify-content: center;
   gap: 6px;
 }
-/* #action-container {
-  height: 4000px;
-} */
 
 #create-button-link:hover {
   top: calc(65% - 1px);
@@ -199,42 +202,37 @@
   }
 }
 @media only screen and (max-width: 576px) {
+  #web-fs-view {
+    display: none;
+  }
+  #mobile-fs-view {
+    display: flex;
+    position: fixed;
+    width: 50%;
+    height: 90%;
+    flex-direction: column;
+    left: 50%;
+    top: 10%;
+    z-index: 5;
+    background-color: white;
+    padding: 8px;
+    padding-top: 16px;
+    border-left: 1px solid grey;
+    border-top: 1px solid grey;
+    border-top-left-radius: 16px;
+  }
+  #mobile-fs-view-filter {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+  }
+  #mobile-fs-view-sort {
+    padding-top: 8px;
+  }
   #pack-container {
     margin-top: 8px;
     display: grid;
     grid-template-columns: 12rem;
     row-gap: 16px;
     justify-content: center;
-  }
-  #filter-view {
-    display: none;
-    position: sticky;
-    top: 25%;
-    left: 60%;
-    z-index: 2;
-    width: 40%;
-    border: 3px solid rgb(73, 73, 130);
-    padding-top: 8px;
-    height: 75vh;
-    border-top-left-radius: 10px;
-  }
-  #sort-view {
-    display: none;
-    position: sticky;
-    top: 25%;
-    left: 60%;
-    z-index: 2;
-    width: 40%;
-    border: 3px solid rgb(73, 73, 130);
-    padding-top: 8px;
-    height: 75vh;
-    border-top-left-radius: 10px;
-  }
-  #filter-view > p {
-    padding-left: 8px;
-  }
-  #sort-view > p {
-    padding-left: 8px;
   }
   #create-button-link {
     position: absolute;
@@ -286,36 +284,26 @@
   }
 }
 @media only screen and (min-width: 577px) {
-  #filter-view {
+  #mobile-fs-view {
     display: none;
-    position: sticky;
-    top: 25%;
-    left: 70%;
-    z-index: 2;
-    width: 30%;
-    border: 3px solid rgb(73, 73, 130);
-    padding-top: 8px;
-    height: 75vh;
-    border-top-left-radius: 10px;
   }
-  #sort-view {
-    display: none;
-    position: sticky;
-    top: 25%;
-    left: 70%;
-    z-index: 2;
-    width: 30%;
-    border: 3px solid rgb(73, 73, 130);
-    padding-top: 8px;
-    height: 75vh;
-    border-top-left-radius: 10px;
+
+  #web-fs-view {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    padding-bottom: 8px;
   }
-  #filter-view > p {
-    padding-left: 8px;
+  #web-fs-view-filter {
+    width: 50%;
+    padding: 8px;
+    border-right: 1px solid rgba(128, 128, 128, 0.2);
   }
-  #sort-view > p {
-    padding-left: 8px;
+  #web-fs-view-sort {
+    width: 50%;
+    padding: 8px;
   }
+
   #create-button-link {
     position: absolute;
     left: 4%;

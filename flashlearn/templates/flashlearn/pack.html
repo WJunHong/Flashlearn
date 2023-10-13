@@ -3,5 +3,225 @@
 {% block css %}
 <link href="{% static 'flashlearn/styles_pack.css' %}" rel="stylesheet" />
 {% endblock %} 
+{% block dependencies %}
+<script src="https://cdn.plot.ly/plotly-2.26.0.min.js" charset="utf-8"></script>
+<script src="plotly-2.26.0.min.js" charset="utf-8"></script>
+{% endblock %}
 {% block body %}
+
+<div class="pack-container">
+<div class="card shadow mt-2" style="width: 90%; margin: auto;">
+    <div class="card-body">
+        <h5 class="card-title mb-4" id="pack-name">Pack name<span class="badge badge-success ml-2">#111111</span></h5>
+       
+        <div id="middle-row" class=" mb-4 "><span id="like-count">1</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-fire" viewBox="0 0 16 16">
+            <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z"/>
+          </svg><span class="badge badge-pill badge-secondary ml-3">Category</span>
+         
+        </div>
+          
+                <form method="post" action="" class="mb-3 like-actions">
+                  <button class="like-btn like"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                      <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/>
+                    </svg></button>
+                  <button class="like-btn dislike" ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-hand-thumbs-down-fill" viewBox="0 0 16 16">
+                      <path d="M6.956 14.534c.065.936.952 1.659 1.908 1.42l.261-.065a1.378 1.378 0 0 0 1.012-.965c.22-.816.533-2.512.062-4.51.136.02.285.037.443.051.713.065 1.669.071 2.516-.211.518-.173.994-.68 1.2-1.272a1.896 1.896 0 0 0-.234-1.734c.058-.118.103-.242.138-.362.077-.27.113-.568.113-.856 0-.29-.036-.586-.113-.857a2.094 2.094 0 0 0-.16-.403c.169-.387.107-.82-.003-1.149a3.162 3.162 0 0 0-.488-.9c.054-.153.076-.313.076-.465a1.86 1.86 0 0 0-.253-.912C13.1.757 12.437.28 11.5.28H8c-.605 0-1.07.08-1.466.217a4.823 4.823 0 0 0-.97.485l-.048.029c-.504.308-.999.61-2.068.723C2.682 1.815 2 2.434 2 3.279v4c0 .851.685 1.433 1.357 1.616.849.232 1.574.787 2.132 1.41.56.626.914 1.28 1.039 1.638.199.575.356 1.54.428 2.591z"/>
+                    </svg></button>
+                </form>
+
+    <div id="bottom-segment">
+    <div id="left-side">
+      <form action="" method="post" class="mt-3">
+        <button class="btn btn-outline-warning mb-3" >Add to favourites <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="yellow" class="bi bi-star-fill" viewBox="0 0 16 18">
+          <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+        </svg></button>
+      </form>
+       <p class="card-text"><b>Created by:</b> somebody</p>
+       <p class="card-text"><b>Description:</b> <br><i class="descrip"> blah blah blah</i></p>
+       <p class="card-text"><b>Card count:</b> 10</p>
+       <p class="card-text"><b>Average difficulty:</b> 2</p>
+       <p class="card-text"><b>Privacy:</b> something</p>
+    </div>
+        <div id="right-side">
+            <p class="card-text"><b>Statistics:</b></p>
+            <p>Total plays: 10</p>
+            <div id="scoreBoxPlot"></div> 
+            <!-- Use plotly -->
+            <div id="scoreTimeSeries"></div>
+        </div>
+    </div>
+        <div class="mt-5">            
+            <!-- Create modal for editing info, update page on submit -->
+            <button id="edit-btn" data-toggle="modal" data-target="#editModal">Edit <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+              </svg></button>
+            <!-- Generate new content within card below this -->
+            <button id="start-btn">Start new game <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+              </svg></button>
+        </div>
+        <form method="post" action="" class="mt-4">
+            <div class="form-group">
+                <label for="select-order">Order:</label>
+                <select class="custom-select form-control shadow-none" id="select-order" aria-describedby="order-help">
+                    <option value="random" selected>Random</option>
+                    <option value="difficulty">Difficulty</option>
+                  </select>
+                <small id="order-help" class="form-text text-muted">How should cards be shown?</small>
+              </div>
+            <div class="form-group">
+                <label for="select-handicap">Difficulty handicap:</label>
+                <select class="custom-select form-control shadow-none" id="select-handicap" aria-describedby="handicap-help">
+                    <option value="n" selected>No</option>
+                    <option value="y">Yes</option>
+                  </select>
+                <small id="handicap-help" class="form-text text-muted">Medium questions get +5s, hard ones get +10s</small>
+              </div>
+            <div class="form-group">
+                <label for="select-duration">Duration:</label>
+                <select class="custom-select form-control shadow-none" id="select-duration" aria-describedby="duration-help">
+                    <option value="10" selected>10s</option>
+                    <option value="5">5s</option>
+                    <option value="15" >15s</option>
+                    <option value="20">20s</option>
+                    <option value="25" >25s</option>
+                    <option value="30">30s</option>
+                  </select>
+                <small id="duration-help" class="form-text text-muted">How long should each card be shown for?</small>
+              </div>
+            <div class="form-group">
+                <label for="select-hints">Enable hints:</label>
+                <select class="custom-select form-control shadow-none" id="select-hints" aria-describedby="hints-help">
+                    <option value="n" selected>No</option>
+                    <option value="y" >Yes</option>
+                  </select>
+                <small id="hints-help" class="form-text text-muted">Would you like help recalling?</small>
+              </div>
+          
+            <input class="btn btn-success"type="submit" value="Go!">
+        </form>
+      </div>
+
+</div>
+
+<div class="card shadow mt-4" style="width: 90%; margin: auto;">
+    <div class="card-header">
+        <b>Comments</b>
+      </div>
+    
+    <div class="card-body">
+        <ul class="comment-list">
+            <li class="comment-list-item">
+                <div>                <img src="{% static 'flashlearn/default_profile.jpg'%}">
+                    <span>Username</span></div>
+
+                <div class="comment-body"><i>Comment 123</i></div>
+            </li>
+        </ul>
+       <form action="" method="post" class="comment-form">
+        <textarea placeholder="Add comment"></textarea>
+        <input type="submit" value="Comment">
+       </form>
+      </div>
+</div>
+<form class="mt-5" style="width: 90%; margin: auto;">
+    <button id="report-btn" data-toggle="tooltip" data-placement="top" title="Report pack"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-flag-fill" viewBox="0 0 16 16">
+        <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001"/>
+      </svg></button>
+</form>
+</div>
+<script>
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+          <div class="form-group">
+            <label for="edit-pack-name">Pack name:</label>
+            <input type="text" class="form-control shadow-none" id="edit-pack-name" aria-describedby="name-help" autocomplete="off" placeholder="Name" value="Pack name" name="name" required>
+            <small id="name-help" class="form-text text-muted">Give a new name to your pack!</small>
+          </div>
+          <div class="form-group">
+            <label for="edit-cat">Category:</label>
+            <input class="form-control shadow-none" list="datalistOptions" id="edit-cat" placeholder="Type to search..." name="category" value="category" aria-describedby="cat-help">
+            <datalist id="datalistOptions">
+                {% for cat in categories %}
+                    <option value="{{ cat }}">                    
+                {% endfor %}
+            </datalist>
+            <small id="cat-help" class="form-text text-muted">Remove or choose a new category!</small>
+          </div>
+          <div class="form-group">
+            <label for="edit-descrip">Description:</label>
+            <input type="text" class="form-control shadow-none" id="edit-descrip" aria-describedby="descrip-help" autocomplete="off" value="description" name="descrip">
+            <small id="descrip-help" class="form-text text-muted">Add or remove a description for your pack!</small>
+          </div>
+          <div class="form-group">
+            <label for="edit-privacy">Privacy:</label>
+            <select class="custom-select form-control shadow-none" id="edit-privacy" aria-describedby="privacy-help">
+              <option value="self" >Self</option>
+              <option value="friends" >Friends</option>
+              <option value="all" >All</option>
+            </select>
+            <small id="privacy-help" class="form-text text-muted">Set new privacy for your pack!</small>
+          </div>
+          {% for i in cards %}
+
+          <div class="card mt-2">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="question-{{i}}">Question:</label>
+                <input type="text" class="form-control shadow-none" id="question-{{i}}" autocomplete="off" value="Who dares wins" name="question-{{i}}" required>
+              </div>
+              <div class="form-group">
+                <label for="hint-{{i}}">Hint:</label>
+                <input type="text" class="form-control shadow-none" id="hint-{{i}}" autocomplete="off" value="Who dares wins" name="hint-{{i}}">
+              </div>
+              <div class="form-group">
+                <label for="answer-{{i}}">Answer:</label>
+                <input type="text" class="form-control shadow-none" id="answer-{{i}}" autocomplete="off" value="Who dares wins" name="answer-{{i}}" required>
+              </div>
+              <div class="form-group">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="edit-img-{{i}}" id="remove-img-{{i}}" value="True">
+                  <label class="form-check-label" for="remove-img-{{i}}">
+                    Remove image
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="edit-img-{{i}}" id="new-img-{{i}}" value="False" checked>
+                  <label class="form-check-label" for="new-img-{{i}}">
+                    Add new image
+                  </label>
+                </div>
+                <input type="file" id="img-{{i}}" accept="image/*" disabled>
+              </div>
+            </div>
+            <div class="card-footer">
+              <!-- Prevent default -->
+              <button class="btn btn-outline-danger">Delete card</button>
+            </div>
+          </div>
+          {% endfor %}
+          <!-- Prevent default -->
+          <button class="btn btn-success mt-2">Add card</button>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

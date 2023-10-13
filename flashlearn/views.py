@@ -27,7 +27,7 @@ def pack_view(request, pack_id,  profile=None):
         return HttpResponseRedirect(f"/{pack_id}")
     print(pack_id)
     return render(request, "flashlearn/pack.html", {
-        "frog": pack_id
+        "cards": [1,2,3,4,5]
     })
 
 

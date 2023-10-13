@@ -58,7 +58,7 @@
 </form>
 <div id="action-container">
   <button id="filter-button">
-    Filter<svg
+    Filter & sort<svg
       xmlns="http://www.w3.org/2000/svg"
       width="16"
       height="16"
@@ -71,175 +71,223 @@
       />
     </svg>
   </button>
-  <button id="sort-button">
-    Sort<svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      class="bi bi-sort-up"
-      viewBox="0 0 16 16"
-    >
-      <path
-        d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"
-      />
-    </svg>
-  </button>
-  <div id="filter-view">
-    <p>Filter by:</p>
-    <form method="post" action="" id="filter-form">
-      <ul id="filter-list">
-        <li id="cat-filters">
-          <p><b>Category</b>:</p>
-          {% if user.is_authenticated %}
+  <!-- Web -->
+  <form method="post" action="" id="web-fs-view" class="d-none">
+    <div id="web-fs-view-filter">
+      <p><b>Filter by:</b></p>
+      <div class="form-group">
+        <label for="filter-cat">Category:</label>
+        <input
+          class="form-control shadow-none"
+          list="datalistOptions"
+          id="filter-cat"
+          placeholder="Type to search..."
+          name="category"
+        />
+        <datalist id="datalistOptions">
+          {% for cat in categories %}
+          <option value="{{ cat }}">{% endfor %}</option>
+        </datalist>
+      </div>
+      <div class="form-group">
+        <label for="filter-time">Recency:</label>
+        <select class="custom-select form-control shadow-none" id="filter-time">
+          <option value="all" selected>All</option>
+          <option value="today">Today</option>
+          <option value="week">Last week</option>
+          <option value="month">Last month</option>
+          <option value="year">Last year</option>
+        </select>
+      </div>
+      <button class="btn btn-success">Submit</button>
+      <button class="btn btn-danger">Cancel</button>
+    </div>
+    <div id="web-fs-view-sort">
+      <p><b>Sort by:</b></p>
+      <div class="form-group">
+        <div class="form-check">
           <input
-            type="checkbox"
-            id="filter-category-favourite"
-            name="category_fav"
-            value="favourite"
-          />
-          <label for="filter-category-favourite"> Favourites</label><br />
-          {% endif %}
-          <!-- TBD load in all possible categories -->
-        </li>
-        <li>
-          <p><b>Recency:</b></p>
-          <input
+            class="form-check-input"
             type="radio"
-            id="filter-date-today"
-            name="date"
-            value="today"
-          />
-          <label for="filter-date-today"> Today</label><br />
-          <input type="radio" id="filter-date-week" name="date" value="week" />
-          <label for="filter-date-week"> Last week</label><br />
-          <input
-            type="radio"
-            id="filter-date-month"
-            name="date"
-            value="month"
-          />
-          <label for="filter-date-month"> Last month</label><br />
-          <input type="radio" id="filter-date-year" name="date" value="year" />
-          <label for="filter-date-year"> Last year</label><br />
-          <input
-            type="radio"
-            id="filter-date-all"
-            name="date"
-            value="all"
-            checked
-          />
-          <label for="filter-date-all"> All time</label><br />
-        </li>
-        {% if user.is_authenticated %}
-        <li>
-          <p><b>Users:</b></p>
-          <input
-            type="radio"
-            id="filter-user-all"
-            name="users"
-            value="all"
-            checked
-          />
-          <label for="filter-user-all"> All</label><br />
-          <input
-            type="radio"
-            id="filter-user-friends"
-            name="users"
-            value="friends"
-          />
-          <label for="filter-user-friends"> Friends</label><br />
-          <input type="radio" id="filter-user-me" name="users" value="me" />
-          <label for="filter-user-me"> Me</label><br />
-        </li>
-        {% endif %}
-      </ul>
-      <ul id="filter-actions">
-        <li>
-          <input type="submit" value="Apply" id="submit-filter" />
-        </li>
-        <li>
-          <button id="cancel-filter">Cancel</button>
-        </li>
-      </ul>
-    </form>
-  </div>
-  <div id="sort-view">
-    <p>Filter by:</p>
-    <form method="post" action="">
-      <ul>
-        <li>
-          <p>Time:</p>
-          <input
-            type="checkbox"
-            id="sort-time"
             name="sort"
+            id="sort-time"
             value="time"
+          />
+          <label class="form-check-label" for="sort-time"> Recency </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="sort"
+            id="sort-name"
+            value="name"
+          />
+          <label class="form-check-label" for="sort-name"> Name </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="sort"
+            id="sort-likes"
+            value="likes"
+          />
+          <label class="form-check-label" for="sort-likes"> Likes </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="sort"
+            id="sort-difficulty"
+            value="difficulty"
+          />
+          <label class="form-check-label" for="sort-difficulty">
+            Difficulty
+          </label>
+        </div>
+
+        <div class="form-check mt-3">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="order"
+            id="sort-ascending"
+            value="up"
+          />
+          <label class="form-check-label" for="sort-ascending">
+            Ascending
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="order"
+            id="sort-descending"
+            value="down"
             checked
           />
-          <label for="sort-time"> Recency</label><br />
-
+          <label class="form-check-label" for="sort-descending">
+            Descending
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- Mobile -->
+  <form method="post" action="" id="mobile-fs-view" class="d-none">
+    <div id="mobile-fs-view-filter">
+      <p><b>Filter by:</b></p>
+      <div class="form-group">
+        <label for="filter-cat-mobile">Category:</label>
+        <input
+          class="form-control shadow-none"
+          list="datalistOptions"
+          id="filter-cat-mobile"
+          placeholder="Type to search..."
+          name="category"
+        />
+        <datalist id="datalistOptions">
+          {% for cat in categories %}
+          <option value="{{ cat }}">{% endfor %}</option>
+        </datalist>
+      </div>
+      <div class="form-group">
+        <label for="filter-time-mobile">Recency:</label>
+        <select
+          class="custom-select form-control shadow-none"
+          id="filter-time-mobile"
+        >
+          <option value="all" selected>All</option>
+          <option value="today">Today</option>
+          <option value="week">Last week</option>
+          <option value="month">Last month</option>
+          <option value="year">Last year</option>
+        </select>
+      </div>
+    </div>
+    <div id="mobile-fs-view-sort">
+      <p><b>Sort by:</b></p>
+      <div class="form-group">
+        <div class="form-check">
           <input
+            class="form-check-input"
             type="radio"
-            id="sort-time-asc"
-            name="time-order"
-            value="asc"
+            name="sort"
+            id="sort-time-mobile"
+            value="time"
           />
-          <label for="sort-time-asc"> Ascending</label><br />
+          <label class="form-check-label" for="sort-time-mobile">
+            Recency
+          </label>
+        </div>
+        <div class="form-check">
           <input
+            class="form-check-input"
             type="radio"
-            id="sort-time-desc"
-            name="time-order"
-            value="desc"
+            name="sort"
+            id="sort-name-mobile"
+            value="name"
+          />
+          <label class="form-check-label" for="sort-name-mobile"> Name </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="sort"
+            id="sort-likes-mobile"
+            value="likes"
+          />
+          <label class="form-check-label" for="sort-likes-mobile">
+            Likes
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="sort"
+            id="sort-difficulty-mobile"
+            value="difficulty"
+          />
+          <label class="form-check-label" for="sort-difficulty-mobile">
+            Difficulty
+          </label>
+        </div>
+
+        <div class="form-check mt-3">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="order"
+            id="sort-ascending-mobile"
+            value="up"
+          />
+          <label class="form-check-label" for="sort-ascending-mobile">
+            Ascending
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="order"
+            id="sort-descending-mobile"
+            value="down"
             checked
           />
-          <label for="sort-time-desc"> Descending</label><br />
-        </li>
-        <li>
-          <p>Name:</p>
-          <input type="checkbox" id="sort-name" name="sort" value="name" />
-          <label for="sort-name"> Name</label><br />
-
-          <input
-            type="radio"
-            id="sort-name-asc"
-            name="name-order"
-            value="asc"
-          />
-          <label for="sort-name-asc"> Ascending</label><br />
-          <input
-            type="radio"
-            id="sort-name-desc"
-            name="name-order"
-            value="desc"
-          />
-          <label for="sort-name-desc"> Descending</label><br />
-        </li>
-        <li>
-          <p>Likes:</p>
-          <input type="checkbox" id="sort-likes" name="sort" value="likes" />
-          <label for="sort-likes"> Likes</label><br />
-
-          <input
-            type="radio"
-            id="sort-likes-asc"
-            name="likes-order"
-            value="asc"
-          />
-          <label for="sort-likes-asc"> Ascending</label><br />
-          <input
-            type="radio"
-            id="sort-likes-desc"
-            name="likes-order"
-            value="desc"
-          />
-          <label for="sort-likes-desc"> Descending</label><br />
-        </li>
-      </ul>
-      <input type="submit" value="Apply" id="submit-sort" />
-      <button id="cancel-sort">Cancel</button>
-    </form>
-  </div>
+          <label class="form-check-label" for="sort-descending-mobile">
+            Descending
+          </label>
+        </div>
+      </div>
+      <button class="btn btn-success">Submit</button>
+      <button class="btn btn-danger">Cancel</button>
+    </div>
+  </form>
 </div>
 <div id="pack-container">
   {% for i in list %}
@@ -256,4 +304,9 @@
   </div>
   {% endfor %}
 </div>
+{% endblock %}
+
+{% block script %}
+        <script src="{% static 'flashlearn/index.js' %}">
+        </script>
 {% endblock %}
