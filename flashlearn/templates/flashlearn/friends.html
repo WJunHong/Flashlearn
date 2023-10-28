@@ -1,68 +1,85 @@
-{% extends "flashlearn/base.html" %}
-{% load static %}
-{% block css %}
-<link href="{% static 'flashlearn/styles_friends.css' %}" rel="stylesheet">
-{% endblock %}
-
-{% block body %}
+{% extends "flashlearn/base.html" %} {% load static %} {% block css %}
+<link href="{% static 'flashlearn/styles_friends.css' %}" rel="stylesheet" />
+{% endblock %} {% block body %}
 <div id="friend-container">
-<form method="post" action="" class="form-inline">
+  <p class="friend-header">Search user:</p>
+  <small>By user ID or username!</small>
+  <form method="post" action="" class="form-inline">
     {% csrf_token %}
     <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text">#</div>
-        </div>
-        <input type="text" class="form-control shadow-none mr-2" id="search_friend" placeholder="e.g. A31PLR">
+      <div class="input-group-prepend">
+        <div class="input-group-text">#</div>
       </div>
-    <input class="btn btn-primary" type="submit" value="Search">
-</form>
-<div id="searh-results">
-<p class="friend-header">Search Results:</p>
-    Where search will appear. Results will show all users who match. Friends will show Green bar, non-friends show blue bar.
-    Send friend request to user -> Store friend request in DB. If friend request pending already, then leave as pending
-
-</div>
-<div id="sent-requests">
-    <p class="friend-header">Sent requests:</p>
-<form action="" method="get">
-    {% csrf_token %}
-    <button class="btn">Load more...</button>
-</form>
-</div>
-<div id="pending-requests">
-    <p class="friend-header">Pending Invitations:</p>
-    <form action="" method="get">
-        {% csrf_token %}
-        <button class="btn">Load more...</button>
-    </form>
-</div>
-<div id="friends-list">
-    <p class="friend-header">Friends:</p>
-    <form action="" method="get">
-        {% csrf_token %}
-        <button class="btn">Load more...</button>
-    </form>
-</div>
-<div class="friend-list-item">
-    <div class="side-bar-color"></div>
-    <div class="user-descrip">
-        <img class="profile-image">
-        <p class="profile-name">Name 123</p>
+      <input
+        type="text"
+        class="form-control shadow-none mr-2"
+        id="search_friend"
+        placeholder="e.g. A31PLR"
+      />
     </div>
+    <input class="btn btn-primary" type="submit" value="Search" />
+  </form>
+  <div id="searh-results"></div>
+  <div id="sent-requests">
+    <p class="friend-header">Sent requests:</p>
+  </div>
+  <div id="pending-requests">
+    <p class="friend-header">Pending invitations:</p>
+  </div>
+  <div id="friends-list">
+    <p class="friend-header">Friends:</p>
+    {% for friend in friends %}
+    <div class="friend-list-item">
+      <!-- Click here to navigate -->
 
-    <form action="" method="post" class="list-actions">
+      <div class="user-descrip">
+        <img class="profile-image" />
+        <div>
+          <p class="profile-name">Name 123</p>
+          <span class="badge badge-success profile-id">#123456</span>
+        </div>
+        <a href="/profile" class="navigation-link"></a>
+      </div>
+
+      <form action="" method="post" class="list-actions">
         {% csrf_token %}
-        <button class="list-item-btn accept"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-check" viewBox="0 0 17 16">
-            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-          </svg></button>
-        <button class="list-item-btn reject"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-x" viewBox="0 0 16 16">
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-          </svg></button>
+        <button class="list-item-btn accept">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="#5adbb5"
+            class="bi bi-check"
+            viewBox="0 0 17 16"
+          >
+            <path
+              d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"
+            />
+          </svg>
+        </button>
+        <button class="list-item-btn reject">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="#ed0800"
+            class="bi bi-x"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </button>
         <!-- <button>Add</button>
-        <button>Remove</button> -->
-    </form>
-
+          <button>Remove</button> -->
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  <!-- How a friend list item would look like -->
 </div>
-</div>
 
+{% endblock %} {% block script %}
+<script src="{% static 'flashlearn/friends.js' %}"></script>
 {% endblock %}

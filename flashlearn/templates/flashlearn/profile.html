@@ -1,26 +1,52 @@
-{% extends "flashlearn/base.html" %} 
-{% load static %} 
-{% block css %}
+{% extends "flashlearn/base.html" %} {% load static %} {% block css %}
 <link href="{% static 'flashlearn/styles_profile.css' %}" rel="stylesheet" />
-{% endblock %} 
-{% block body %}
+{% endblock %} {% block body %}
 <div id="profile-container">
   <div id="profile-header">
-    <img
-      src="{% static 'flashlearn/default_profile.jpg'%}"
-      id="profile-image"
-    />
-    <div>
-
-        <button class="btn btn-dark">Upload new photo</button>
-        <button class="btn btn-secondary">Upload new background</button>
-    </div>
+    <!-- Profile image -->
+    <form action="" method="post" id="profile-image-form">
+      <button
+        id="profile-image-button"
+        aria-describedby="profile-change-helper"
+      >
+        <img
+          src="{% static 'flashlearn/default_profile.jpg'%}"
+          id="profile-image"
+        />
+      </button>
+      <div id="background-form-fields" hidden>
+        <input
+          type="file"
+          accept="image/*"
+          id="image-upload"
+          name="profile-image"
+        />
+        <div>
+          <input
+            type="checkbox"
+            id="remove-background-checkbox"
+            name="toRemove"
+            value="T"
+          />
+          <label for="remove-background-checkbox">Remove background</label>
+        </div>
+        <div>
+          <button class="btn btn-warning" id="hide-profile-selection">
+            Hide
+          </button>
+          <input type="submit" class="btn btn-success" id="profile-submit" />
+        </div>
+      </div>
+    </form>
+    <small id="profile-change-helper" class="form-text text-muted"
+      >Click avatar to upload/remove a profile photo</small
+    >
+    <!-- User info -->
     <div id="profile-info">
-      <h3>
-        Username<span class="badge badge-success ml-2"># Something</span>
-      </h3>
+      <h3>Username<span class="badge badge-success ml-2"># Something</span></h3>
     </div>
   </div>
+  <!-- Packs owned by user visible to viewer -->
   <div id="profile-packs">
     {% for i in list %}
     <div class="card shadow-sm something" style="width: 12rem">
@@ -37,4 +63,6 @@
     {% endfor %}
   </div>
 </div>
+{% endblock %} {% block script %}
+<script src="{% static 'flashlearn/profile.js'%}"></script>
 {% endblock %}

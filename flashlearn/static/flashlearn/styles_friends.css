@@ -5,26 +5,22 @@
   font-family: "Roboto", sans-serif;
 }
 
-.side-bar-color {
-  width: 8px;
-  background-color: green;
-  height: 100%;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
 .friend-list-item {
   width: 90%;
   margin: auto;
-  border: 1px solid grey;
+  border: 1px solid rgba(128, 128, 128, 0.2);
   height: 64px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-radius: 10px;
 }
 .friend-list-item:hover {
   cursor: pointer;
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.04), 2px 2px 0px rgba(0, 0, 0, 0.04),
+    4px 4px 0 rgba(0, 0, 0, 0.04), 6px 6px 0 rgba(0, 0, 0, 0.04),
+    8px 8px 0 rgba(0, 0, 0, 0.04);
+  transition-duration: 500ms;
 }
 .list-actions {
   margin-right: 8px;
@@ -35,43 +31,39 @@
   border: none;
   border-radius: 25px;
 }
-.accept {
-  background-color: #5adbb5;
-}
-.accept:hover {
-  background-color: #4fb999;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12),
-    0 4px 4px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.12),
-    0 8px 8px rgba(0, 0, 0, 0.12);
-  transition-duration: 500ms;
-}
+.accept,
 .reject {
-  background-color: #ed0800;
+  background-color: white;
+  border: 1px solid rgba(128, 128, 128, 0.4);
 }
+.accept:hover,
 .reject:hover {
-  background-color: #d20a03;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12),
-    0 4px 4px rgba(0, 0, 0, 0.12), 0 6px 6px rgba(0, 0, 0, 0.12),
-    0 8px 8px rgba(0, 0, 0, 0.12);
+  background-color: rgb(195, 195, 195);
   transition-duration: 500ms;
 }
+
 .user-descrip {
   width: calc(100% - 128px);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  margin-left: 16px;
 }
 .profile-name {
   margin-left: 8px;
   overflow-x: hidden;
   font-weight: 600;
+  margin-bottom: 0px;
 }
 .profile-image {
   width: 48px;
   height: 48px;
   border-radius: 25px;
   border: 1px solid grey;
+}
+.profile-id {
+  margin-left: 8px;
 }
 .friend-header {
   font-size: 16px;

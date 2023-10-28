@@ -9,6 +9,20 @@
   height: 28px;
   background-color: orange;
 }
+.cover-cancel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-container.card.mt-2 {
+  position: relative;
+}
 .like-btn {
   border: none;
   border-radius: 14px;
@@ -59,6 +73,13 @@
   padding: 8px;
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
+}
+#edit-btn:focus,
+#start-btn:focus {
+  outline: none;
+}
+.turn {
+  transform: rotate(180deg);
 }
 .comment-list {
   list-style-type: none;
