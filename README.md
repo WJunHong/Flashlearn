@@ -69,3 +69,9 @@ Speed & efficiency are also important for good user experience and for the proce
 ### Feedback
 
 Lastly, even as we do not restrict learning methods of our users, some public cards packs might be offensive to other users. We will review each report and remove the card pack using superuser account if necessary.
+
+pandas
+plotly
+
+nYPkPJ
+wjh1

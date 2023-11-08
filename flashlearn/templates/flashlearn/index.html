@@ -76,10 +76,10 @@
     <div id="web-fs-view-filter">
       <p><b>Filter by:</b></p>
       <div class="form-group">
-        <label for="filter-cat-">Category:</label>
+        <label for="filter-cat">Category:</label>
         <select
           name="category"
-          id="filter-cat-"
+          id="filter-cat"
           class="form-control shadow-none"
         >
           {% for cat in categories %}
@@ -106,7 +106,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-web"
             id="sort-time"
             value="creation_time"
@@ -116,7 +116,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-web"
             id="sort-name"
             value="name"
@@ -126,7 +126,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-web"
             id="sort-likes"
             value="like_count"
@@ -136,7 +136,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-web"
             id="sort-difficulty"
             value="avg_difficulty"
@@ -210,7 +210,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-mobile"
             id="sort-time-mobile"
             value="creation_time"
@@ -222,7 +222,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-mobile"
             id="sort-name-mobile"
             value="name"
@@ -232,7 +232,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-mobile"
             id="sort-likes-mobile"
             value="like_count"
@@ -244,7 +244,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
-            type="radio"
+            type="checkbox"
             name="sort-mobile"
             id="sort-difficulty-mobile"
             value="avg_difficulty"
@@ -285,12 +285,14 @@
     </div>
   </form>
 </div>
-<!-- Dummy div for navigation -->
-<div id="dummy-navigation"></div>
+
 <div id="pack-container"></div>
-<button class="btn btn-outline-secondary d-none" id="back-to-top-btn">
-  Back to top
-</button>
+<div id="buttons-container" class="mt-3 mb-5 justify-content-center d-flex">
+  <button class="btn btn-outline-success d-none" id="back-to-top-btn">
+    Back to top
+  </button>
+</div>
+
 {% endblock %} {% block script %}
 <script src="{% static 'flashlearn/index.js' %}"></script>
 {% endblock %}

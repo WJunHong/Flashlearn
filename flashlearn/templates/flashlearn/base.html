@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Hello</title>
+    <title>Flashlearn</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -36,9 +36,14 @@
           {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link friends-tab" href="{% url 'friends' %}"
-              >Friends<span class="badge badge-danger ml-1 invite-count"
-                >4</span
-              ></a
+              >Friends</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link profile-tab"
+              href="{% url 'profile' profile=request.user.userId %}"
+              >Profile</a
             >
           </li>
           <li class="nav-item">
@@ -73,9 +78,14 @@
           {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link friends-tab-mobile" href="{% url 'friends' %}"
-              >Friends<span class="badge badge-danger ml-1 invite-count-mobile"
-                >4</span
-              ></a
+              >Friends</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link profile-tab"
+              href="{% url 'profile' profile=request.user.userId %}"
+              >Profile</a
             >
           </li>
           <li class="nav-item">

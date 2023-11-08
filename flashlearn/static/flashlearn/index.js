@@ -2,6 +2,8 @@ var page = 1;
 var searchPage = 1;
 var fsPage = 1;
 
+var lastFetched = 0;
+
 document.addEventListener("DOMContentLoaded", async () => {
   let fsBtn = document.querySelector("#filter-button");
   let cancelMobileBtn = document.querySelector("#cancel-mobile-btn");
@@ -28,95 +30,145 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   topBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    window.location = "#dummy-navigation";
+    document.querySelector("#search-bar").scrollIntoView();
   });
 
-  function filterSort(fromQueryString) {
-    if (document.querySelector("#pack-container").hasChildNodes()) {
-      fsBtn.classList.remove("d-none");
-      document.querySelector(".fs-submitter").addEventListener("click", (e) => {
-        e.preventDefault();
-        let body = {};
-        if (fromQueryString) {
-          // Read in last used query string
-          if (lastQuery.length > 0) {
-            body.queryString = lastQuery;
-          }
-        } else {
-          // Read all fs inputs
-          if (window.innerWidth > 576) {
-            let filterCat = document.querySelector("#filter-cat").value;
-            let filterTime = document.querySelector("#filter-time").value;
-            let sortType = document.querySelector(
-              'input[name="sort-web"]:checked'
-            ).value;
-            let sortDirection = document.querySelector(
-              'input[name="order-web"]:checked'
-            ).value;
-            body.cat = filterCat;
-            body.time = filterTime;
-            body.sort = sortType;
-            body.direction = sortDirection;
-          } else {
-            let filterCat = document.querySelector("#filter-cat-mobile").value;
-            let filterTime = document.querySelector(
-              "#filter-time-mobile"
-            ).value;
-            let sortType = document.querySelector(
-              'input[name="sort-mobile"]:checked'
-            ).value;
-            let sortDirection = document.querySelector(
-              'input[name="order-mobile"]:checked'
-            ).value;
-            body.cat = filterCat;
-            body.time = filterTime;
-            body.sort = sortType;
-            body.direction = sortDirection;
+  sort_options_list = [
+    document.querySelector("#sort-time"),
+    document.querySelector("#sort-name"),
+    document.querySelector("#sort-difficulty"),
+    document.querySelector("#sort-likes"),
+  ];
+  sort_options_list_mobile = [
+    document.querySelector("#sort-time-mobile"),
+    document.querySelector("#sort-name-mobile"),
+    document.querySelector("#sort-difficulty-mobile"),
+    document.querySelector("#sort-likes-mobile"),
+  ];
+  for (let i = 0; i < 4; i++) {
+    sort_options_list[i].addEventListener("change", (e) => {
+      if (e.target.checked) {
+        console.log("here");
+        sort_options_list_mobile[i].checked = true;
+        for (let j = 0; j < 4; j++) {
+          if (j != i) {
+            sort_options_list[j].checked = false;
+            sort_options_list_mobile[i].checked = false;
           }
         }
-        lastFs = body;
-        fetch(`/fs/${fsPage}`, {
-          method: "POST",
-          mode: "same-origin",
-          headers: { "X-CSRFToken": csrftoken },
-          body: JSON.stringify(body),
-        })
-          .then((res) => res.json())
-          .then((res) => {
-            listPacks(res, true);
-            if (res.more) {
-              showMore("fs");
-            }
-          });
+      }
+    });
+  }
+  for (let i = 0; i < 4; i++) {
+    sort_options_list_mobile[i].addEventListener("change", (e) => {
+      if (e.target.checked) {
+        sort_options_list[i].checked = true;
+        for (let j = 0; j < 4; j++) {
+          if (j != i) {
+            sort_options_list[j].checked = false;
+            sort_options_list_mobile[i].checked = false;
+          }
+        }
+      }
+    });
+  }
+
+  const fsEvent = (e) => {
+    e.preventDefault();
+    let body = {};
+    if (lastQuery.length > 0) {
+      // Read in last used query string
+      body.queryString = lastQuery;
+    }
+    // Read all fs inputs
+    if (window.innerWidth > 576) {
+      let filterCat = document.querySelector("#filter-cat").value;
+      let filterTime = document.querySelector("#filter-time").value;
+      let sortType = document.querySelector(
+        'input[name="sort-web"]:checked'
+      )?.value;
+      let sortDirection = document.querySelector(
+        'input[name="order-web"]:checked'
+      ).value;
+      body.cat = filterCat;
+      body.time = filterTime;
+      body.sort = sortType;
+      body.direction = sortDirection;
+    } else {
+      let filterCat = document.querySelector("#filter-cat-mobile").value;
+      let filterTime = document.querySelector("#filter-time-mobile").value;
+      let sortType = document.querySelector(
+        'input[name="sort-mobile"]:checked'
+      ).value;
+      let sortDirection = document.querySelector(
+        'input[name="order-mobile"]:checked'
+      ).value;
+      body.cat = filterCat;
+      body.time = filterTime;
+      body.sort = sortType;
+      body.direction = sortDirection;
+    }
+    lastFs = body;
+    fetch(`/fs/${fsPage}`, {
+      method: "POST",
+      mode: "same-origin",
+      headers: { "X-CSRFToken": csrftoken },
+      body: JSON.stringify(body),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        listPacks(res.packs, true);
+        if (res.more) {
+          showMore("fs");
+        }
       });
+  };
+
+  function filterSort() {
+    if (document.querySelector("#pack-container").hasChildNodes()) {
+      fsBtn.classList.remove("d-none");
+      document
+        .querySelector(".fs-submitter")
+        .addEventListener("click", fsEvent);
+    } else {
+      fsBtn.classList.add("d-none");
     }
   }
 
   function listPacks(packs, clear) {
     if (clear) {
       packContainer.innerHTML = "";
+      document.querySelector(".btn-search-loadM")?.remove();
+      document.querySelector(".btn-search-loadL")?.remove();
+      document.querySelector(".btn-fs-loadM")?.remove();
+      document.querySelector(".btn-fs-loadL")?.remove();
+      document.querySelector(".btn-index-loadM")?.remove();
+      document.querySelector(".btn-index-loadL")?.remove();
     }
     packs.forEach((pack) => {
       packContainer.innerHTML += `<div class="card shadow-sm something" style="width: 12rem">
       <div class="card-body">
-        <h5 class="card-title">${pack.name}<span class="badge badge-success">#${pack.id}</span></h5>
+        <h5 class="card-title">${pack.name}</h5>
+        <p class="badge badge-success">#${pack.id}</p>
         <h6 class="card-subtitle mb-2 text-muted">${pack.creator}</h6><br>
-        {% if ${pack.category} %}
-        <span class="badge badge-info">${pack.category}</span>
-        {% endif %}
+        ${
+          pack.category
+            ? `<span class="badge badge-info">${pack.category}</span>`
+            : ""
+        }
+       
         <p class="card-text">
-          {% if ${pack.description} %}
-            Some quick example text to build on the card title and make up the bulk
-            of the card's content.
-          {% else %}
-            This pack has no description, click to find out more!
-          {% endif %}
+          ${
+            pack.description
+              ? pack.description
+              : "This pack has no description, click to find out more!"
+          }
         </p>
-        <a href="#" class="stretched-link"></a>
+        <a href="pack/${pack.id}" class="stretched-link"></a>
       </div>
       <div class="card-footer text-muted">
       ${pack.like_count} likes <br>
-      ${pack.avg_difficulty} difficulty
+      Difficulty level: ${pack.avg_difficulty}
     </div>
     </div>`;
     });
@@ -124,46 +176,68 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function showMore(pageType) {
     let loadMoreBtn = document.createElement("button");
-    loadMoreBtn.classList.add("btn", "btn-outline-primary");
+    loadMoreBtn.classList.add(
+      "btn",
+      "btn-outline-primary",
+      `btn-${pageType}-loadM`
+    );
     loadMoreBtn.setAttribute("id", "show-more-btn");
     loadMoreBtn.textContent = "Show more...";
-    packContainer.after(loadMoreBtn);
-    loadMoreBtn.addEventListener("click", (e) => {
+    let loadLessBtn = document.createElement("button");
+    loadLessBtn.classList.add(
+      "btn",
+      "btn-outline-success",
+      "d-none",
+      `btn-${pageType}-loadL`
+    );
+    loadLessBtn.setAttribute("id", "show-less-btn");
+    loadLessBtn.textContent = "Show less...";
+    document.querySelector("#buttons-container").appendChild(loadMoreBtn);
+    document.querySelector("#buttons-container").appendChild(loadLessBtn);
+    topBtn.classList.add("d-none");
+    loadLessBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      if (loadMoreBtn.textContent == "Show less...") {
-        if (pageType == "index") {
-          page--;
-          if (page < 2) {
-            topBtn.classList.add("d-none");
-          }
-        } else if (pageType == "search") {
-          searchPage--;
-          if (searchPage < 2) {
-            topBtn.classList.add("d-none");
-          }
-        } else if (pageType == "fs") {
-          fsPage--;
-          if (fsPage < 2) {
-            topBtn.classList.add("d-none");
-          }
+      if (pageType == "index") {
+        page--;
+        if (page < 2) {
+          topBtn.classList.add("d-none");
+          loadLessBtn.classList.add("d-none");
         }
-        for (let i = 0; i < 10; i++) {
-          packContainer.removeChild(packContainer.lastChild);
+      } else if (pageType == "search") {
+        searchPage--;
+        if (searchPage < 2) {
+          topBtn.classList.add("d-none");
+          loadLessBtn.classList.add("d-none");
+        }
+      } else if (pageType == "fs") {
+        fsPage--;
+        if (fsPage < 2) {
+          topBtn.classList.add("d-none");
+          loadLessBtn.classList.add("d-none");
         }
       }
+      loadMoreBtn.classList.remove("d-none");
+      for (let i = 0; i < lastFetched; i++) {
+        packContainer.removeChild(packContainer.lastChild);
+      }
+    });
+
+    loadMoreBtn.addEventListener("click", (e) => {
+      e.preventDefault();
       if (pageType == "index") {
         page++;
         fetch(`/${[pageType]}/${page}`)
           .then((res) => res.json())
           .then((res) => {
             listPacks(res.packs, false);
+            lastFetched = res.packs.length;
             if (!res.more) {
-              loadMoreBtn.textContent = "Show less...";
+              loadMoreBtn.classList.add("d-none");
             }
           });
       } else if (pageType == "search") {
         searchPage++;
-        fetch(`/${[pageType]}/${page}`, {
+        fetch(`/${[pageType]}/${searchPage}`, {
           method: "POST",
           mode: "same-origin",
           headers: { "X-CSRFToken": csrftoken },
@@ -174,13 +248,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           .then((res) => res.json())
           .then((res) => {
             listPacks(res.packs, false);
+            lastFetched = res.packs.length;
             if (!res.more) {
-              loadMoreBtn.textContent = "Show less...";
+              loadMoreBtn.classList.add("d-none");
             }
           });
       } else if (pageType == "fs") {
         fsPage++;
-        fetch(`/${[pageType]}/${page}`, {
+        fetch(`/${[pageType]}/${fsPage}`, {
           method: "POST",
           mode: "same-origin",
           headers: { "X-CSRFToken": csrftoken },
@@ -189,44 +264,34 @@ document.addEventListener("DOMContentLoaded", async () => {
           .then((res) => res.json())
           .then((res) => {
             listPacks(res.packs, false);
+            lastFetched = res.packs.length;
             if (!res.more) {
-              loadMoreBtn.textContent = "Show less...";
+              loadMoreBtn.classList.add("d-none");
             }
           });
       }
-
-      if (pageType == "index") {
-        if (page > 1) {
-          topBtn.classList.remove("d-none");
-        }
-      } else if (pageType == "search") {
-        if (searchPage > 1) {
-          topBtn.classList.remove("d-none");
-        }
-      } else if (pageType == "fs") {
-        if (fsPage > 1) {
-          topBtn.classList.remove("d-none");
-        }
-      }
+      loadLessBtn.classList.remove("d-none");
+      topBtn.classList.remove("d-none");
     });
   }
 
   function displayRes(res, pageType) {
     listPacks(res.packs, true);
+
     if (res.more) {
       showMore(pageType);
     }
-    filterSort(pageType == "search");
+    filterSort();
   }
   await fetch(`/index/${page}`)
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
       displayRes(res, "index");
     })
     .catch((e) => console.err(e));
   // Search feature
   document.querySelector(".search-btn").addEventListener("click", async (e) => {
+    e.preventDefault();
     let queryString = document.querySelector("#search-bar").value;
     lastQuery = queryString;
     if (queryString.length == 0) {

@@ -2,11 +2,26 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
+import json
+
+
+def user_image_location(instance, filename):
+    return 'user_images/user_{0}_{1}'.format(instance.userId, filename)
 
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     userId = models.CharField(unique=True, max_length=6)
+
+    # Image url
+    image = models.ImageField(blank=True, upload_to=user_image_location)
+
+    def serialize(self):
+        return {
+            "userId": self.userId,
+            "name": self.username,
+            "image": self.image.url if self.image else None
+        }
 
 
 class Category(models.Model):
@@ -30,7 +45,7 @@ class Packs(models.Model):
     description = models.TextField(blank=True, default="")
     # Category
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="packs", blank=True, default="")
+        Category, on_delete=models.CASCADE, related_name="packs", blank=True, default="", null=True)
     # Creator
     creator = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="created_packs", default=1)
@@ -44,7 +59,7 @@ class Packs(models.Model):
     # Creation time
     creation_time = models.DateTimeField(auto_now=True)
 
-    def serialize(self, id):
+    def serialize(self, id=0):
         return {
             "id": self.packId,
             "creator": self.creator.username,
@@ -86,7 +101,7 @@ class Plays(models.Model):
 
 
 def image_location(instance, filename):
-    return 'user_{0}/{1}'.format(instance.user.id, filename)
+    return 'pack_{0}/{1}'.format(instance.pack.packId, filename)
 
 
 class Cards(models.Model):

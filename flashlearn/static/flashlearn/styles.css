@@ -2,6 +2,9 @@
   .navbar-expand-sm .navbar-nav.bigger {
     display: none;
   }
+  .invite-count {
+    display: none;
+  }
 }
 
 @media only screen and (min-width: 577px) {
@@ -9,6 +12,10 @@
     display: none;
   }
   .navbar-expand-sm .navbar-nav.smaller {
+    display: none;
+  }
+
+  .invite-count-mobile {
     display: none;
   }
 }

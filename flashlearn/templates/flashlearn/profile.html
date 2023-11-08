@@ -5,15 +5,22 @@
   <div id="profile-header">
     <!-- Profile image -->
     <form action="" method="post" id="profile-image-form">
+      <!-- Button to update profile image -->
+      {% if profile_user %}
       <button
         id="profile-image-button"
         aria-describedby="profile-change-helper"
       >
+        {% if user.image %}
+        <img src="{{ user.image.url }}" id="profile-image" />
+        {% else %}
         <img
-          src="{% static 'flashlearn/default_profile.jpg'%}"
+          src="{% static 'flashlearn/default_profile.jpg' %}"
           id="profile-image"
         />
+        {% endif %}
       </button>
+      <!-- Update profile image form -->
       <div id="background-form-fields" hidden>
         <input
           type="file"
@@ -26,7 +33,7 @@
             type="checkbox"
             id="remove-background-checkbox"
             name="toRemove"
-            value="T"
+            value="F"
           />
           <label for="remove-background-checkbox">Remove background</label>
         </div>
@@ -41,26 +48,70 @@
     <small id="profile-change-helper" class="form-text text-muted"
       >Click avatar to upload/remove a profile photo</small
     >
-    <!-- User info -->
+
+    {% else %}
+    <div id="profile-image-image">
+      {% if user.image %}
+      <img src="{{ user.image.url }}" id="profile-image" />
+      {% else %}
+      <img
+        src="{% static 'flashlearn/default_profile.jpg' %}"
+        id="profile-image"
+      />
+    </div>
+    {% endif %} {% endif %}
+    <!-- User profile info -->
     <div id="profile-info">
-      <h3>Username<span class="badge badge-success ml-2"># Something</span></h3>
+      <h3>
+        {{ user.username }}<span class="badge badge-success ml-2"
+          ># {{user.userId}}</span
+        >
+      </h3>
     </div>
   </div>
   <!-- Packs owned by user visible to viewer -->
-  <div id="profile-packs">
-    {% for i in list %}
-    <div class="card shadow-sm something" style="width: 12rem">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <a href="#" class="stretched-link"></a>
-      </div>
+  <div id="profile-content">
+    {% if profile_user %}
+    <div id="buttons-group">
+      <button id="packs-button" class="profile-button-1" autofocus>
+        User's Packs
+      </button>
+      <button id="likes-button" class="profile-button-1">Likes</button>
+      <input
+        type="text"
+        value="{{ user.userId }}"
+        hidden
+        readonly
+        id="user-id"
+      />
+
+      <button id="fav-button" class="profile-button-1">Favs</button>
     </div>
-    {% endfor %}
+    {% else %}
+    <div id="buttons-group">
+      <button id="packs-button" class="profile-button-2" autofocus>
+        User's Packs
+      </button>
+      <button id="likes-button" class="profile-button-2">Likes</button>
+      <input
+        type="text"
+        value="{{ user.userId }}"
+        hidden
+        readonly
+        id="user-id"
+      />
+      {% if request.user.is_authenticated %}
+      <input
+        type="text"
+        value="{{ request.user.id }}"
+        hidden
+        readonly
+        id="my-user-id"
+      />
+      {% endif %}
+    </div>
+    {% endif %}
+    <div id="profile-packs"></div>
   </div>
 </div>
 {% endblock %} {% block script %}

@@ -70,3 +70,14 @@
   font-weight: bold;
   margin-top: 8px;
 }
+
+@media only screen and (min-width: 576px) {
+  #submit-search {
+    margin-top: 0px;
+  }
+}
+@media only screen and (max-width: 575px) {
+  #submit-search {
+    margin-top: 8px;
+  }
+}
