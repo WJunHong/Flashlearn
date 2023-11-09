@@ -109,6 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((res) => {
         if (res.successful) {
           console.log("successful update");
+          if (res.user.image) {
+            document.querySelector("#profile-image").src = res.user.image;
+          } else {
+            document.querySelector("#profile-image").src =
+              "/static/flashlearn/default_profile.jpg";
+          }
         } else {
           console.error("something went wrong");
         }

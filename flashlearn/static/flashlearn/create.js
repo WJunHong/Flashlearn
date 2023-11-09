@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <input type="text" class="form-control shadow-none mb-3" id="Q${count}" placeholder="E.g. What is the atomic mass of carbon?" name="Q${count}" required autocomplete="off">
         
         <label for="H${count}" >Hint (optional):</label>
-        <input type="text" class="form-control shadow-none mb-3" id="H1" name="H${count}" autocomplete="off">
+        <input type="text" class="form-control shadow-none mb-3" id="H${count}" name="H${count}" autocomplete="off">
         <div class="mb-3">
         <label>Difficulty:</label><br>
         <div class="form-check form-check-inline">
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let form = new FormData();
         form.append("name", name);
         form.append("description", description);
-        form.append("cat", cat);
+        form.append("categories", cat);
         form.append("privacy", privacy);
         form.append("count", cardCount);
         let doNotSubmit = false;

@@ -82,8 +82,9 @@
           id="filter-cat"
           class="form-control shadow-none"
         >
+          <option value="" selected>Choose here</option>
           {% for cat in categories %}
-          <option value="{{ cat }}">cat</option>
+          <option value="{{ cat.name }}">{{cat.name}}</option>
           {% endfor %}
         </select>
       </div>

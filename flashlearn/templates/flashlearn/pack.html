@@ -130,44 +130,55 @@
                   </select>
                 <small id="hints-help" class="form-text text-muted">Would you like help recalling?</small>
               </div>
-          
-            <input class="btn btn-success"type="submit" value="Go!">
+            
+            <input class="btn btn-success"type="submit" value="Go!" id="start-game" data-toggle="modal" data-target="#gameModal">
             </div>
       </div>
 
 </div>
 
-<div class="card shadow mt-4" style="width: 90%; margin: auto;">
-    <div class="card-header">
-        <b>Comments</b>
-      </div>
-    
-    <div class="card-body">
-        <ul class="comment-list">
-            <li class="comment-list-item">
-                <div>                <img src="{% static 'flashlearn/default_profile.jpg'%}">
-                    <span>Username</span></div>
 
-                <div class="comment-body"><i>Comment 123</i></div>
-            </li>
-        </ul>
-       <form action="" method="post" class="comment-form">
-        <textarea placeholder="Add comment"></textarea>
-        <input type="submit" value="Comment">
-       </form>
-      </div>
-</div>
-<form class="mt-5" style="width: 90%; margin: auto;">
-    <button id="report-btn" data-toggle="tooltip" data-placement="top" title="Report pack"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-flag-fill" viewBox="0 0 16 16">
-        <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001"/>
-      </svg></button>
-</form>
+
 </div>
 <script>
     $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
 </script>
+<div class="modal fade" id="gameModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="card-question"></h5>
+        <!-- <button type="button"
+        class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control mb-3" id="card-answer">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="show-card-hint">
+          <label class="form-check-label" for="show-card-hint">Show available hint</label>
+        </div>
+        <p id="card-hint" class="d-none"></p>
+
+        <div id="card-image"></div>
+        <div class="alert alert-danger d-none" role="alert" id="wrong-answer">
+          Your answer is wrong!
+        </div>
+        <div class="alert alert-success d-none" role="alert" id="correct-answer">
+          
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div id="timer"></div>
+        <button class="btn btn-success d-none" id="submit-game">Submit results!</button>
+        <button class="btn btn-primary" id="submit-answer">Answer!</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -189,12 +200,18 @@
             <label for="edit-cat">Category (optional):</label>
             
           
-            <select name="category" id="edit-cat" class="form-control shadow-none" {% if pack.category %} value="{{pack.category}}" {% else %} value="" {% endif %}  aria-describedby="cat-help">
+            <select name="category" id="edit-cat" class="form-control shadow-none"  aria-describedby="cat-help">
+              {% if not pack.category %}
+              <option value="" selected disabled hidden>Choose here</option>
               {% for cat in categories %}
-              <option value="{{ cat }}">{{cat}}</option>
-              
+              <option value="{{ cat.name }}">{{cat.name}}</option>
               {% endfor %}
-              <option value="">remove</option>    
+              {% else %}
+              {% for cat in categories %}
+              <option value="{{ cat.name }}" {% if pack.category.name == cat.name %} selected {% endif %}>{{cat.name}}</option>
+              {% endfor %}
+              <option value="">remove</option>
+              {% endif %}    
             </select>
             <small id="cat-help" class="form-text text-muted">Remove or choose a new category!</small>
           </div>
@@ -264,7 +281,13 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>Supporting Image (max 50Mb):</label>
+                <label>Original Image: </label><br>
+                {% if card.image %}
+                <img src="{{card.image.url}}" width="168" height="168" /><br>
+                {% else %}
+                <p class="text-muted">Card has no image</p>
+                {% endif %}
+                <label>Change supporting Image:</label>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="edit-img-{{i}}" id="remove-img-{{i}}" value="True">
                   <label class="form-check-label" for="remove-img-{{i}}">
@@ -307,6 +330,7 @@
 {% block script %}
 <script>
   var packId = "{{ pack.packId }}";
+  var cards_for_play = '{{cards_play|safe}}';
 </script>
 <script src="{% static 'flashlearn/pack.js'%}">
 

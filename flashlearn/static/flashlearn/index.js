@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       body.direction = sortDirection;
     }
     lastFs = body;
+    fsPage = 1;
     fetch(`/fs/${fsPage}`, {
       method: "POST",
       mode: "same-origin",
@@ -144,6 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.querySelector(".btn-fs-loadL")?.remove();
       document.querySelector(".btn-index-loadM")?.remove();
       document.querySelector(".btn-index-loadL")?.remove();
+      document.querySelector("#back-to-top-btn")?.classList.add("d-none");
     }
     packs.forEach((pack) => {
       packContainer.innerHTML += `<div class="card shadow-sm something" style="width: 12rem">

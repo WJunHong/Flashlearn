@@ -13,6 +13,7 @@ import os
 import plotly.express as px
 import plotly.offline as opy
 import plotly.graph_objects as go
+import pandas as pd
 
 privList = ["all", "friends", "private"]
 
@@ -60,6 +61,7 @@ def create_view(request):
                     d = card.get("difficulty")
                     if d in difficulty_mapper.keys():
                         avg_difficulty += difficulty_mapper[d]
+
                     else:
                         return JsonResponse({"error": ["problem adding new pack"]}, status=201)
 
@@ -67,7 +69,7 @@ def create_view(request):
             avg_score = 0
             like_count = 0
             pack = Packs(name=name, packId=packId, cards=card_count, privacy=privacy,
-                         description=description, category=cat, creator=creator, avg_difficulty=avg_difficulty, avg_score=avg_score, like_count=like_count)
+                         description=description, category=(Category.objects.filter(name=cat).first() if cat else None), creator=creator, avg_difficulty=avg_difficulty, avg_score=avg_score, like_count=like_count)
             pack.save()
             for i in card_numbers:
                 # Get card values:
@@ -76,7 +78,7 @@ def create_view(request):
                 a = card.get("answer")
                 h = card.get("hint")
                 d = card.get("difficulty")
-                i = data.get("i{0}".format(i))
+                i = request.FILES.get("i{0}".format(i))
                 if len(q) == 0 or len(a) == 0:
                     return JsonResponse({"error": ["problem adding new pack"]}, status=201)
 
@@ -89,7 +91,7 @@ def create_view(request):
             return JsonResponse({"error": ["Something went wrong"]}, status=201)
 
     else:
-        categories = Category.objects.all().values_list("name")
+        categories = Category.objects.all()
         return render(request, "flashlearn/create.html", {
             "categories": categories
         })
@@ -132,10 +134,8 @@ def profile_pack_view(request, profile, type):
                 os.remove(user.image.path)
                 user.image = ''
             user.save()
-            return render(request, "flashlearn/profile.html", {
-                "user": user,
-                "profile_user": True
-            })
+            return JsonResponse({"successful": True, "user": user.serialize()}, status=201)
+
         else:
             return JsonResponse({"successful": False}, status=201)
 
@@ -167,10 +167,18 @@ def pack_handler_view(request, packId, operation):
                 confirmation = json.loads(request.body).get("confirm")
                 if Packs.objects.filter(creator__id=request.user.id, packId=packId) and confirmation:
                     pack = Packs.objects.filter(
-                        creator__id=request.user.id, packId=packId)
+                        creator__id=request.user.id, packId=packId).first()
                     try:
+                        # Delete all associated images with the pack
+                        cards = Cards.objects.filter(pack=pack).all()
+                        print(cards)
+                        for card in cards:
+                            if card.image:
+                                if os.path.isfile(card.image.path):
+                                    os.remove(card.image.path)
+                        # delete the actual pack
                         pack.delete()
-                        return HttpResponseRedirect(reverse("index"))
+                        return JsonResponse({"success": True}, status=201)
                     except:
                         return JsonResponse({"success": False}, status=201)
             elif operation == "edit":
@@ -208,7 +216,8 @@ def pack_handler_view(request, packId, operation):
                                 actual_card_count += 1
                                 card_data = json.loads(
                                     data.get("c{0}".format(card)))
-                                card_img = data.get("i{0}".format(card))
+                                card_img = request.FILES.get(
+                                    "i{0}".format(card))
                                 # New card
                                 c_q = card_data.get("q")
                                 c_h = card_data.get("h")
@@ -216,6 +225,7 @@ def pack_handler_view(request, packId, operation):
                                 c_d = card_data.get("d")
                                 avg_difficulty += difficulty_mapper[c_d]
                                 c_i = card_img
+
                                 if int(card_data.get("o")) == -1:
                                     if not c_q or not c_a or not c_d:
                                         return JsonResponse({"success": False}, status=201)
@@ -256,9 +266,10 @@ def pack_handler_view(request, packId, operation):
                         pack.name = name
 
                         if cat:
-                            pack.category = Category(name=cat)
+                            pack.category = Category.objects.filter(
+                                name=cat).first()
                         elif pack.category:
-                            pack.category.delete()
+                            pack.category = None
                         pack.cards = actual_card_count
                         pack.avg_score = 0
                         pack.description = description
@@ -274,8 +285,15 @@ def pack_handler_view(request, packId, operation):
                         print(e)
                         return JsonResponse({"success": False}, status=201)
             elif operation == "play":
-                pass
-                # check if pack even exists
+                score = json.loads(request.body).get("score")
+                newPlay = Plays(user=User.objects.get(id=request.user.id),
+                                pack=Packs.objects.get(packId=packId), score=score)
+                try:
+                    newPlay.save()
+                    return JsonResponse({"success": True}, status=201)
+                except:
+                    return JsonResponse({"success": False}, status=201)
+
             try:
                 pack = Packs.objects.get(packId=packId)
                 if operation == "addFav":
@@ -345,6 +363,17 @@ def pack_handler_view(request, packId, operation):
                         return JsonResponse({"success": False}, status=201)
             except:
                 return JsonResponse({"success": False}, status=201)
+        else:
+            if operation == "play":
+                try:
+                    score = json.loads(request.body).get("score")
+                    newPlay = Plays(None, pack=Packs.objects.get(
+                        packId=packId), score=score)
+                    newPlay.save()
+                    return JsonResponse({"success": True}, status=201)
+                except Exception as e:
+                    print(e)
+                    return JsonResponse({"success": False}, status=201)
 
     return JsonResponse({"success": False}, status=201)
 
@@ -363,14 +392,15 @@ def pack_view(request, pack_id):
     pack = Packs.objects.get(packId=pack_id)
     # Get cards for the pack
 
-    cards = Cards.objects.filter(pack=pack).order_by("id").all()
-    card_num_list = range(1, len(cards) + 1)
-    cards = zip(card_num_list, cards)
+    all_cards = Cards.objects.filter(pack=pack).order_by("id").all()
+    card_num_list = range(1, len(all_cards) + 1)
+    cards = zip(card_num_list, all_cards)
     # Get total plays
     total_play_count = len(Plays.objects.filter(pack=pack).all())
     all_plays = Plays.objects.filter(pack=pack).all()
-    score_plot = px.box(
-        [play.score for play in all_plays], y=["Scores"])
+    df = {"Scores": [play.score for play in all_plays]}
+    df = pd.DataFrame(df)
+    score_plot = px.box(df, y="Scores")
     # Set privacy
     can_play = False
 
@@ -406,12 +436,14 @@ def pack_view(request, pack_id):
             user_best = user_plays.order_by("-score").first().score
             user_scores = round(
                 sum([play.score for play in user_plays]) / len(user_plays), 2)
-            scatter_trace = go.Scatter(x=[user_scores], mode='markers')
+            scatter_trace = go.Scatter(
+                y=[user_scores], mode='markers', name='your average score')
             score_plot.add_trace(scatter_trace)
         # Can the user play this game
 
         plot_html = opy.plot(
             score_plot, auto_open=False, output_type='div')
+        categories = Category.objects.all()
         return render(request, "flashlearn/pack.html", {
             "plot": plot_html,
             "pack": pack,
@@ -423,7 +455,9 @@ def pack_view(request, pack_id):
             "disliked": disliked,
             "favourite": favourite,
             "best_score": user_best,
-            "avg_score": user_scores
+            "avg_score": user_scores,
+            "cards_play": json.dumps([card.serialize() for card in all_cards]),
+            "categories": categories
         })
     plot_html = opy.plot(score_plot, auto_open=False, output_type='div')
     return render(request, "flashlearn/pack.html", {
@@ -433,6 +467,7 @@ def pack_view(request, pack_id):
         "play_count": total_play_count,
         "is_creator": False,
         "can_play": can_play,
+        "cards_play": json.dumps([card.serialize() for card in all_cards])
     })
 
 
@@ -440,15 +475,18 @@ def tutorial_view(request):
     return render(request, "flashlearn/tutorial.html")
 
 
-def searchPacks(data):
+def searchPacks(data, filtered_packs=None):
     queryString = data.get("queryString")
     if not queryString:
         return JsonResponse({"error": "invalid query String"}, status=201)
     # Extract information out of the query string
     tokens = [string for string in queryString.strip().split(" ")
               if string]
-
-    allPacks = Packs.objects.all()
+    allPacks = None
+    if filtered_packs:
+        allPacks = filtered_packs
+    else:
+        allPacks = Packs.objects.all()
     packs = None
     for token in tokens:
         username = allPacks.filter(creator__username__icontains=token)
@@ -461,6 +499,7 @@ def searchPacks(data):
         else:
             packs.union(username).union(packname).union(
                 packId).union(description)
+
     return packs.all()
 
 
@@ -480,16 +519,13 @@ def search_pages_view(request, page):
 def fs_pages_view(request, page):
     if request.method == "POST":
         data = json.loads(request.body)
-        print(data)
         packs = Packs.objects.all()
-        if data.get("queryString"):
-            packs = searchPacks(data)
         cat = data.get("cat")
         time = data.get("time")
         sort = data.get("sort")
         direction = data.get("direction")
         if cat:
-            packs = packs.filter(category=cat)
+            packs = packs.filter(category__name=cat)
         if time:
             if time == "today":
                 today = datetime.today()
@@ -516,6 +552,9 @@ def fs_pages_view(request, page):
                     now.year - 1, now.month, now.day, tzinfo=datetime.now(
                         timezone.utc).astimezone().tzinfo)
                 packs = packs.filter(creation_time__gte=one_year_ago)
+
+        if data.get("queryString") and len(packs) > 0:
+            packs = searchPacks(data, packs)
         if sort:
             if direction:
                 packs = packs.order_by(
@@ -542,7 +581,7 @@ def index_pages_view(request, page):
 
 
 def index(request):
-    categories = Category.objects.all().values_list("name")
+    categories = Category.objects.all()
     return render(request, "flashlearn/index.html", {
         "categories": categories
     })
@@ -602,8 +641,10 @@ def friends_handler_view(request, type, page=1):
                 friends = all_friends[(page-1)*10:10*page]
                 friend_types = []
                 for friend in friends:
+                    if SentInvites.objects.filter(invitee__id=request.user.id, sender__id=friend.id).exists() and not SentInvites.objects.filter(sender__id=request.user.id, invitee__id=friend.id).exists():
+                        friend_types.append((friend.userId, "AI"))
                     # If the person was already invited by u
-                    if SentInvites.objects.filter(sender__id=request.user.id, invitee__id=friend.id).exists():
+                    elif SentInvites.objects.filter(sender__id=request.user.id, invitee__id=friend.id).exists():
                         friend_types.append((friend.userId, "S"))
                     # If the person had invited u
                     elif SentInvites.objects.filter(invitee__id=request.user.id, sender__id=friend.id).exists():

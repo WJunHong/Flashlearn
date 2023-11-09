@@ -67,7 +67,7 @@ class Packs(models.Model):
             "name": self.name.title(),
             "cards": self.cards,
             "privacy": self.privacy,
-            "category": self.category,
+            "category": self.category.name if self.category else None,
             "avg_score": self.avg_score,
             "description": self.description,
             "like_count": self.like_count,
@@ -83,7 +83,7 @@ class Plays(models.Model):
     #             params={"value": value},)
     # User
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="played", default=1)
+        User, on_delete=models.CASCADE, related_name="played", null=True)
     # pack
     pack = models.ForeignKey(
         Packs, on_delete=models.CASCADE, related_name="plays", default=1)
@@ -101,7 +101,7 @@ class Plays(models.Model):
 
 
 def image_location(instance, filename):
-    return 'pack_{0}/{1}'.format(instance.pack.packId, filename)
+    return 'card_images/card_{0}_{1}'.format(instance.pack.packId, filename)
 
 
 class Cards(models.Model):
@@ -120,13 +120,13 @@ class Cards(models.Model):
     # Image url
     image = models.ImageField(blank=True, upload_to=image_location)
 
-    def serialize(self, id):
+    def serialize(self):
         return {
             "question": self.question,
             "difficulty": self.difficulty,
             "answer": self.answer,
             "hint": self.hint,
-            "image": self.image
+            "image": self.image.url if self.image else None
         }
 
 

@@ -126,8 +126,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.success == null) {
+        if (res.success) {
           console.log("successful delete");
+          const a = document.createElement("a");
+          a.href = window.location.href.split("/")[0];
+          a.click();
         } else {
           console.error("could not delete");
         }
@@ -164,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.append("cat", newCat);
     form.append("description", newDescrip);
     form.append("privacy", newPriv);
-    console.log(cardCount);
+    let finalCardCount = cardCount;
     for (let card = 1; card <= cardCount; card++) {
       if (document.querySelector(`#use${card}`).value == "T") {
         let q = document.querySelector(`#question-${card}`).value;
@@ -223,14 +226,20 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Please limit your file size to 50mb!");
             return;
           }
+
           form.append(`i${card}`, image);
         }
       } else {
         if (document.querySelector(`#cid${card}`)) {
+          finalCardCount--;
           let toDelete = document.querySelector(`#cid${card}`).value;
           form.append(`c${card}-`, toDelete);
         }
       }
+    }
+    if (finalCardCount == 0) {
+      alert("1 card must remain!");
+      return;
     }
     form.append("card_count", cardCount);
     fetch(`${packId}/edit`, {
@@ -252,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Favourite button
-  document.querySelector("#fav-btn").addEventListener("click", (e) => {
+  document.querySelector("#fav-btn")?.addEventListener("click", (e) => {
     e.preventDefault();
     if (
       document.querySelector("#fav-btn").textContent.trim() ==
@@ -271,6 +280,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
           </svg>
         `;
+            document
+              .querySelector("#fav-btn")
+              .classList.toggle("btn-secondary");
+            document.querySelector("#fav-btn").classList.toggle("btn-warning");
           } else {
             console.error("something went wrong for fav!");
           }
@@ -292,6 +305,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
           </svg>
        `;
+            document
+              .querySelector("#fav-btn")
+              .classList.toggle("btn-secondary");
+            document.querySelector("#fav-btn").classList.toggle("btn-warning");
           } else {
             console.error("something went wrong for fav!");
           }
@@ -299,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   // Dislike button
-  document.querySelector(".dislike-btn").addEventListener("click", (e) => {
+  document.querySelector(".dislike-btn")?.addEventListener("click", (e) => {
     e.preventDefault();
     if (document.querySelector(".dislike-btn").classList.contains("dislike")) {
       fetch(`${packId}/removeDislike`, {
@@ -345,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Like button
-  document.querySelector(".like-btn").addEventListener("click", (e) => {
+  document.querySelector(".like-btn")?.addEventListener("click", (e) => {
     e.preventDefault();
     if (document.querySelector(".like-btn").classList.contains("like")) {
       fetch(`${packId}/removeLike`, {
@@ -386,5 +403,178 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
     }
+  });
+
+  function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  }
+
+  let difficultyMapper = {
+    E: 1,
+    M: 2,
+    H: 3,
+  };
+  function orderByDifficulty(array) {
+    array.sort((x, y) => {
+      if (difficultyMapper[x.difficulty] > difficultyMapper[y.difficulty]) {
+        return 1;
+      } else if (
+        difficultyMapper[x.difficulty] == difficultyMapper[y.difficulty]
+      ) {
+        return 0;
+      } else {
+        return -1;
+      }
+    });
+  }
+
+  document.querySelector("#start-game").addEventListener("click", (e) => {
+    e.preventDefault();
+    // Reset everything on click
+    let card_index = 0;
+    document.querySelector("#card-question").textContent = "";
+    document.querySelector("#card-answer").value = "";
+    document.querySelector("#show-card-hint").checked = false;
+    document.querySelector("#show-card-hint").setAttribute("disabled", true);
+    document.querySelector("#card-hint").textContent = "";
+    if (document.querySelector("#card-image").hasChildNodes()) {
+      document.querySelector("#card-image").removeChild();
+    }
+    document.querySelector("#submit-game").classList.add("d-none");
+
+    document.querySelector("#wrong-answer").classList.add("d-none");
+    document.querySelector("#correct-answer").classList.add("d-none");
+
+    document.querySelector("#gameModal").classList.add("d-none");
+    let cards_play = JSON.parse(cards_for_play);
+    let order = document.querySelector("#select-order").value;
+    let handicap = document.querySelector("#select-handicap").value;
+    let duration = parseInt(document.querySelector("#select-duration").value);
+    let enable_hint = document.querySelector("#select-hints").value;
+    console.log(enable_hint);
+    if (order == "random") {
+      shuffleArray(cards_play);
+    } else if (order == "difficulty") {
+      orderByDifficulty(cards_play);
+    }
+    if (enable_hint == "n") {
+      document.querySelector("#show-card-hint").setAttribute("disabled", true);
+    } else if (enable_hint == "y") {
+      document.querySelector("#show-card-hint").removeAttribute("disabled");
+    }
+    document.querySelector("#show-card-hint").addEventListener("click", (e) => {
+      if (document.querySelector("#show-card-hint").checked) {
+        document.querySelector("#card-hint").classList.remove("d-none");
+      } else {
+        document.querySelector("#card-hint").classList.add("d-none");
+      }
+    });
+    let score_tracker = 0;
+    document.querySelector("#submit-game").addEventListener("click", (e) => {
+      e.preventDefault();
+      fetch(`${packId}/play`, {
+        method: "POST",
+        mode: "same-origin",
+        headers: { "X-CSRFToken": csrftoken },
+        body: JSON.stringify({
+          score: score_tracker,
+        }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.success) {
+            window.location.reload();
+          } else {
+            console.error("something went wrong");
+          }
+        });
+    });
+    document.querySelector("#gameModal").classList.remove("d-none");
+
+    function play_game() {
+      let card = cards_play[card_index];
+      let total_time = duration;
+      if (handicap == "y") {
+        if (card.difficulty == "M") {
+          total_time += 5;
+        } else if (card.difficulty == "H") {
+          total_time += 10;
+        }
+      }
+      document.querySelector("#card-question").textContent = card.question;
+      document.querySelector("#card-hint").textContent = card.hint
+        ? card.hint
+        : "no hint available";
+
+      if (card.image) {
+        document.querySelector(
+          "#card-image"
+        ).innerHTML = `<img src=${card.image.url} width=250 height=250 />`;
+      } else {
+        document.querySelector("#card-image").innerHTML = "";
+      }
+      document.querySelector("#card-answer").value = "";
+      if (document.querySelector("#submit-answer")) {
+        document.querySelector("#submit-answer").remove();
+      }
+      const answerButton = document.createElement("button");
+      answerButton.setAttribute("id", "submit-answer");
+      answerButton.textContent = "Answer!";
+      answerButton.classList.add("btn", "btn-primary");
+      document.querySelector(".modal-footer").appendChild(answerButton);
+      answerButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        let userAns = document.querySelector("#card-answer").value;
+        let actualAns = card.answer;
+        if (userAns && userAns.toUpperCase() == actualAns.toUpperCase()) {
+          document.querySelector("#wrong-answer").classList.add("d-none");
+          clearInterval(x);
+          ++score_tracker;
+          card_index++;
+          if (card_index < cards_play.length) {
+            play_game();
+          } else {
+            document.querySelector("#submit-answer").remove();
+            document.querySelector("#submit-game").classList.remove("d-none");
+          }
+        } else {
+          document.querySelector("#wrong-answer").classList.remove("d-none");
+        }
+      });
+      $("#gameModal").on("hidden.bs.modal", (e) => {
+        e.preventDefault();
+        clearInterval(x);
+      });
+      var x = setInterval(function () {
+        // Display the result in the element with id="demo"
+        document.getElementById("timer").innerHTML = total_time + "s ";
+        total_time--;
+        // If the count down is finished, write some text
+        if (total_time < 0) {
+          document.querySelector("#wrong-answer").classList.add("d-none");
+          clearInterval(x);
+
+          document.querySelector("#correct-answer").classList.remove("d-none");
+          document.querySelector("#correct-answer").textContent = card.answer;
+          let moveOn = setTimeout(() => {
+            document.querySelector("#correct-answer").classList.add("d-none");
+            document.querySelector("#correct-answer").textContent = "";
+            card_index++;
+            if (card_index < cards_play.length) {
+              play_game();
+            } else {
+              document.querySelector("#submit-answer")?.remove();
+              document.querySelector("#submit-game").classList.remove("d-none");
+            }
+          }, 3000);
+        }
+      }, 1000);
+    }
+    play_game();
   });
 });

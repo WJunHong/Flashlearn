@@ -9,7 +9,7 @@ urlpatterns = [
     path("fs/<int:page>", views.fs_pages_view, name="load_fs_page"),
     path("login", views.login_view, name="login"),
     path("register", views.register_view, name="register"),
-    path("tutorial", views.tutorial_view, name="tutorial"),
+
     path("logout", views.logout_view, name="logout"),
     path("friends", views.friends_view, name="friends"),
     path("friends/<str:type>", views.friends_handler_view, name="friend_handler_2"),

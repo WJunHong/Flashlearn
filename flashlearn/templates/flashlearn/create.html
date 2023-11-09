@@ -48,8 +48,9 @@
             <input type="text" class="form-control shadow-none mb-3" id="packDescription" placeholder="Let people know more about your card pack!" name="description" autofocus autocomplete="off">
             <label for="packCat" class="form-label">Category (optional):</label>
             <select name="categories" id="packCat" class="form-control shadow-none">
+              <option value="" selected disabled hidden>Choose here</option>
               {% for cat in categories %}
-              <option value="{{ cat }}">cat</option>                   
+              <option value="{{ cat.name }}">{{cat.name}}</option>                   
               {% endfor %}
             </select>
            

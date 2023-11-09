@@ -473,12 +473,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         .querySelector(`#search-remove-sent-${userId}`)
         .classList.remove("d-none");
     }
+    if (type == "AI") {
+      document
+        .querySelector(`#search-accept-request-${userId}`)
+        .classList.remove("d-none");
+      document
+        .querySelector(`#search-reject-request-${userId}`)
+        .classList.remove("d-none");
+      document.querySelector(`#invite-${userId}`)?.classList.remove("d-none");
+    }
     if (type == "I") {
       document
         .querySelector(`#search-accept-request-${userId}`)
         .classList.remove("d-none");
       document
-        .querySelector(`#search-reject-request--${userId}`)
+        .querySelector(`#search-reject-request-${userId}`)
         .classList.remove("d-none");
     }
     if (type == "F") {

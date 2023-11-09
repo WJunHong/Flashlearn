@@ -33,7 +33,7 @@
       >
       <div id="nav-content">
         <ul class="navbar-nav mr-auto bigger">
-          {% if user.is_authenticated %}
+          {% if request.user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link friends-tab" href="{% url 'friends' %}"
               >Friends</a
@@ -57,9 +57,6 @@
             <a class="nav-link" href="{% url 'register' %}">Register</a>
           </li>
           {% endif %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'tutorial' %}">Tutorial</a>
-          </li>
         </ul>
       </div>
       <button
@@ -84,7 +81,7 @@
           <li class="nav-item">
             <a
               class="nav-link profile-tab"
-              href="{% url 'profile' profile=request.user.userId %}"
+              href="{% url 'profile' profile=user.userId %}"
               >Profile</a
             >
           </li>
@@ -99,9 +96,6 @@
             <a class="nav-link" href="{% url 'register' %}">Register</a>
           </li>
           {% endif %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'tutorial' %}">Tutorial</a>
-          </li>
         </ul>
       </div>
     </nav>
